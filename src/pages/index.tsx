@@ -1,3 +1,4 @@
+import Foot from '@/components/footer';
 import HomeSec from '@/components/home';
 import Nav from '@/components/nav';
 
@@ -6,6 +7,7 @@ export default function Home() {
     <>
       <Nav />
       <HomeSec />
+      <Foot />
     </>
   );
 }

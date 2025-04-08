@@ -21,7 +21,7 @@ export default function HomeSec() {
             starts here with StudyMunch
           </div>
           <div>
-            <button className='bg-[#04285a] py-3 px-5 font-bold rounded-xl text-xl hover:bg-[#476690] cursor-pointer'>
+            <button className='bg-[#04285a] py-3 px-5 font-bold rounded-xl text-xl hover:bg-[#476690] cursor-pointer text-white'>
               Get Started
             </button>
           </div>
@@ -45,71 +45,47 @@ export default function HomeSec() {
               study sessions into engaging quests with exciting milestones.
             </div>
             <div className='w-full p-[10px] flex flex-row flex-wrap items-center justify-center gap-[20px]'>
-              <div className='bg-gray-100 flex flex-col max-w-[280px] w-full items-center rounded-xl text-black py-[20px] px-[15px] gap-3'>
-                <Image
-                  src='/dash.jpg'
-                  alt='dash'
-                  className='rounded-[100%]'
-                  width={145}
-                  height={145}
-                />
-                <div className='font-bold'>Your Quest Log</div>
-                <div className='text-center'>
-                  Record your tasks and visualize your journey.
+              {[
+                {
+                  title: 'Your Quest Log',
+                  description: 'Record your tasks and visualize your journey.',
+                  image: '/dash.jpg',
+                },
+                {
+                  title: 'Your Quest Log',
+                  description: 'Record your tasks and visualize your journey.',
+                  image: '/dash.jpg',
+                },
+                {
+                  title: 'Your Quest Log',
+                  description: 'Record your tasks and visualize your journey.',
+                  image: '/dash.jpg',
+                },
+                {
+                  title: 'Your Quest Log',
+                  description: 'Record your tasks and visualize your journey.',
+                  image: '/dash.jpg',
+                },
+                {
+                  title: 'Your Quest Log',
+                  description: 'Record your tasks and visualize your journey.',
+                  image: '/dash.jpg',
+                },
+              ].map((log, index) => (
+                <div
+                  key={index}
+                  className='bg-gray-100 flex flex-col max-w-[280px] w-full items-center rounded-xl text-black py-[20px] px-[15px] gap-3 hover:shadow-xl cursor-pointer transition-all duration-300'>
+                  <Image
+                    src={log.image}
+                    alt={log.title}
+                    className='rounded-[100%]'
+                    width={145}
+                    height={145}
+                  />
+                  <div className='font-bold'>{log.title}</div>
+                  <div className='text-center'>{log.description}</div>
                 </div>
-              </div>
-              <div className='bg-gray-100 flex flex-col max-w-[280px] w-full items-center rounded-xl text-black py-[20px] px-[15px] gap-3'>
-                <Image
-                  src='/dash.jpg'
-                  alt='dash'
-                  className='rounded-[100%]'
-                  width={145}
-                  height={145}
-                />
-                <div className='font-bold'>Your Quest Log</div>
-                <div className='text-center'>
-                  Record your tasks and visualize your journey.
-                </div>
-              </div>
-              <div className='bg-gray-100 flex flex-col max-w-[280px] w-full items-center rounded-xl text-black py-[20px] px-[15px] gap-3'>
-                <Image
-                  src='/dash.jpg'
-                  alt='dash'
-                  className='rounded-[100%]'
-                  width={145}
-                  height={145}
-                />
-                <div className='font-bold'>Your Quest Log</div>
-                <div className='text-center'>
-                  Record your tasks and visualize your journey.
-                </div>
-              </div>
-              <div className='bg-gray-100 flex flex-col max-w-[280px] w-full items-center rounded-xl text-black py-[20px] px-[15px] gap-3'>
-                <Image
-                  src='/dash.jpg'
-                  alt='dash'
-                  className='rounded-[100%]'
-                  width={145}
-                  height={145}
-                />
-                <div className='font-bold'>Your Quest Log</div>
-                <div className='text-center'>
-                  Record your tasks and visualize your journey.
-                </div>
-              </div>
-              <div className='bg-gray-100 flex flex-col max-w-[280px] w-full items-center rounded-xl text-black py-[20px] px-[15px] gap-3'>
-                <Image
-                  src='/dash.jpg'
-                  alt='dash'
-                  className='rounded-[100%]'
-                  width={145}
-                  height={145}
-                />
-                <div className='font-bold'>Your Quest Log</div>
-                <div className='text-center'>
-                  Record your tasks and visualize your journey.
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
