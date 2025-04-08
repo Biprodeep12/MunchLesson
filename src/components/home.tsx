@@ -1,6 +1,11 @@
+import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 
 export default function HomeSec() {
+  const { user } = useAuth();
+
   return (
     <>
       <section className='bg-[#dafada] w-full py-[50px] items-center justify-center flex flex-row flex-wrap gap-[25px] px-[10px]'>
@@ -20,10 +25,12 @@ export default function HomeSec() {
             Get smarter, faster. Your personalized path to academic success
             starts here with StudyMunch
           </div>
-          <div>
-            <button className='bg-[#04285a] py-3 px-5 font-bold rounded-xl text-xl hover:bg-[#476690] cursor-pointer text-white'>
-              Get Started
-            </button>
+          <div className='flex'>
+            <Link
+              href={user ? '/AI' : '/AuthPage'}
+              className='bg-[#04285a] py-3 px-5 font-bold rounded-xl text-xl hover:bg-[#476690] cursor-pointer text-white flex flex-row items-center gap-2'>
+              Get Started <ArrowRight />
+            </Link>
           </div>
         </div>
         <div className='px-[30px] flex flex-row gap-[30px] bg-white min-h-[400px] rounded-xl shadow pt-[50px] pb-[90px] flex-wrap justify-center'>
@@ -52,29 +59,33 @@ export default function HomeSec() {
                   image: '/dash.jpg',
                 },
                 {
-                  title: 'Your Quest Log',
-                  description: 'Record your tasks and visualize your journey.',
-                  image: '/dash.jpg',
+                  title: 'Knowledge Knockout',
+                  description:
+                    'Reinforce your understanding with dynamic quizzes.',
+                  image: '/quizz.jpg',
                 },
                 {
-                  title: 'Your Quest Log',
-                  description: 'Record your tasks and visualize your journey.',
-                  image: '/dash.jpg',
+                  title: 'Time Wrap Planner',
+                  description:
+                    'Schedule your your studies and bend time to your academic will for the week/month.',
+                  image: '/studyplanner.jpg',
                 },
                 {
-                  title: 'Your Quest Log',
-                  description: 'Record your tasks and visualize your journey.',
-                  image: '/dash.jpg',
+                  title: 'Leaderboard',
+                  description: 'Every point counts in the pursuit of success.',
+                  image: '/leadershipboard.jpg',
                 },
                 {
-                  title: 'Your Quest Log',
-                  description: 'Record your tasks and visualize your journey.',
-                  image: '/dash.jpg',
+                  title: 'Memory Boost',
+                  description:
+                    'Supercharge your recall with flashcards. Rapidly absorb and retain crucial information.',
+                  image: '/flashcards.jpg',
                 },
               ].map((log, index) => (
-                <div
+                <Link
+                  href='/FlashPage'
                   key={index}
-                  className='bg-gray-100 flex flex-col max-w-[280px] w-full items-center rounded-xl text-black py-[20px] px-[15px] gap-3 hover:shadow-xl cursor-pointer transition-all duration-300'>
+                  className='bg-gray-100 flex flex-col min-h-[305px] max-w-[280px] w-full items-center rounded-xl text-black py-[20px] px-[15px] gap-3 hover:shadow-xl cursor-pointer transition-all duration-300'>
                   <Image
                     src={log.image}
                     alt={log.title}
@@ -84,7 +95,7 @@ export default function HomeSec() {
                   />
                   <div className='font-bold'>{log.title}</div>
                   <div className='text-center'>{log.description}</div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
