@@ -2,7 +2,7 @@ import { AlignJustify, X } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/router'; // Import useRouter
+import { useRouter } from 'next/router';
 import { signOut } from 'firebase/auth';
 import { auth } from '@/firebase/firebase';
 import { useAuth } from '@/context/AuthContext';
