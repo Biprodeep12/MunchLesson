@@ -27,7 +27,7 @@ export default function HomeSec() {
           </div>
           <div className='flex'>
             <Link
-              href={user ? '/AI' : '/AuthPage'}
+              href={user ? '/AIPage' : '/AuthPage'}
               className='bg-[#04285a] py-3 px-5 font-bold rounded-xl text-xl hover:bg-[#476690] cursor-pointer text-white flex flex-row items-center gap-2'>
               Get Started <ArrowRight />
             </Link>
@@ -88,7 +88,7 @@ export default function HomeSec() {
                 },
               ].map((log, index) => (
                 <Link
-                  href={log.lk}
+                  href={user ? log.lk : '/AuthPage'}
                   key={index}
                   className='bg-gray-100 flex flex-col min-h-[305px] max-w-[280px] w-full items-center rounded-xl text-black py-[20px] px-[15px] gap-3 hover:shadow-xl cursor-pointer transition-all duration-300'>
                   <Image

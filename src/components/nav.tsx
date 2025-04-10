@@ -35,7 +35,13 @@ export default function Nav() {
               return (
                 <Link
                   key={name}
-                  href={name === 'Home' ? '/' : `/${name.toLowerCase()}`}
+                  href={
+                    user
+                      ? name === 'Home'
+                        ? '/'
+                        : `/${name.toLowerCase()}`
+                      : '/AuthPage'
+                  }
                   className={`cursor-pointer ${
                     isActive ? 'text-white' : 'text-gray-400 hover:text-white'
                   }`}>
@@ -93,7 +99,13 @@ export default function Nav() {
           return (
             <Link
               key={name}
-              href={name === 'Home' ? '/' : `/${name.toLowerCase()}`}
+              href={
+                user
+                  ? name === 'Home'
+                    ? '/'
+                    : `/${name.toLowerCase()}`
+                  : '/AuthPage'
+              }
               className={`cursor-pointer ${
                 isActive
                   ? 'text-[#04285a] font-bold'
