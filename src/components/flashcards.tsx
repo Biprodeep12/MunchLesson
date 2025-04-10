@@ -7,13 +7,18 @@ import {
   deleteDoc,
   doc,
   updateDoc,
+  query,
+  where,
 } from 'firebase/firestore';
-import { PenLine, X } from 'lucide-react';
+import { ArrowLeft, PenLine, X } from 'lucide-react';
+import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 
 interface Flashcard {
   id: string;
   question: string;
   answer: string;
+  userId: string;
 }
 
 export default function Flash() {
@@ -25,10 +30,17 @@ export default function Flash() {
   const [editQuestion, setEditQuestion] = useState('');
   const [editAnswer, setEditAnswer] = useState('');
   const [text, setText] = useState('');
+  const { user } = useAuth();
 
   useEffect(() => {
+    if (!user) return;
+
     const fetchFlashcards = async () => {
-      const querySnapshot = await getDocs(collection(db, 'flashcards'));
+      const q = query(
+        collection(db, 'flashcards'),
+        where('userId', '==', user.uid),
+      );
+      const querySnapshot = await getDocs(q);
       const flashcardsData = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
@@ -37,16 +49,21 @@ export default function Flash() {
     };
 
     fetchFlashcards();
-  }, []);
+  }, [user]);
 
   const addFlashcard = async () => {
-    if (!question || !answer) return;
+    if (!question || !answer || !user) return;
+
     const docRef = await addDoc(collection(db, 'flashcards'), {
       question,
       answer,
+      userId: user.uid,
     });
 
-    setFlashcards([...flashcards, { id: docRef.id, question, answer }]);
+    setFlashcards([
+      ...flashcards,
+      { id: docRef.id, question, answer, userId: user.uid },
+    ]);
     setQuestion('');
     setAnswer('');
   };
@@ -96,7 +113,14 @@ export default function Flash() {
     <div className='min-h-screen flex flex-col lg:flex-row items-center p-5 bg-gray-100'>
       <div className='flex-1 flex flex-col self-start gap-4 w-full'>
         <div className='flex flex-col lg:flex-row items-center lg:px-15 lg:gap-15 gap-5'>
-          <h1 className='text-3xl font-bold text-nowrap'>Your Flashcards</h1>
+          <div className='text-3xl font-bold text-nowrap flex flex-row items-center gap-5'>
+            <Link
+              href='/dashboard'
+              className='absolute left-5 top-5 lg:top-7 border border-[#ccc] rounded p-1'>
+              <ArrowLeft />
+            </Link>
+            <div>Your Flashcards</div>
+          </div>
           <div className='block lg:hidden bg-white p-4 rounded border border-[#ccc] mb-5'>
             <textarea
               placeholder='Enter question'
@@ -118,7 +142,7 @@ export default function Flash() {
           </div>
           <input
             placeholder='Search for your Flashcards'
-            className='border-b border-[#ccc] outline-none p-2 w-full mb-2'
+            className=' rounded bg-white border border-[#ccc] outline-none p-2 w-full mb-2'
             value={text}
             onChange={(e) => setText(e.target.value)}
           />
@@ -128,13 +152,13 @@ export default function Flash() {
             filteredFlashcards.map((card) => (
               <div
                 key={card.id}
-                className='w-full max-w-[300px] h-[300px] perspective-1000'>
+                className='w-full max-w-[300px] h-[300px] perspective-1000 flashCont cursor-pointer'>
                 <div
                   className={`flashcard-inner w-full h-full transition-transform duration-500 flex items-center ${
                     flipped[card.id] ? 'rotate-y-180' : ''
                   }`}
                   onClick={() => toggleFlip(card.id)}>
-                  <div className='flashcard-front absolute inset-0 flex items-center justify-center bg-[#dafada] shadow-lg rounded p-5 text-[#04285a]'>
+                  <div className='flashcard-front absolute inset-0 flex items-center justify-center bg-[#dafada] border border-[#ccc] rounded p-5 text-[#04285a]'>
                     <p className='text-lg font-semibold text-center overflow-y-auto max-h-[230px] cardSc'>
                       {card.question}
                     </p>
@@ -143,7 +167,7 @@ export default function Flash() {
                         e.stopPropagation();
                         startEditing(card);
                       }}
-                      className='absolute bottom-2 left-2 bg-yellow-500 text-white text gap-2 p-1 rounded cursor-pointer flex flex-row items-center'>
+                      className='absolute bottom-2 left-2 bg-yellow-500 text-white text gap-2 p-1 rounded cursor-pointer hidden flex-row items-center flashBtn'>
                       <PenLine size={19} /> Edit
                     </button>
                     <button
@@ -151,11 +175,11 @@ export default function Flash() {
                         e.stopPropagation();
                         deleteFlashcard(card.id);
                       }}
-                      className='absolute bottom-2 right-2 bg-red-500 text-white text-xs p-1 rounded cursor-pointer'>
+                      className='absolute bottom-2 right-2 bg-red-500 text-white text-xs p-1 hidden rounded cursor-pointer flashBtn'>
                       <X />
                     </button>
                   </div>
-                  <div className='flashcard-back absolute inset-0 flex items-center justify-center bg-[#04285a] text-[#dafada] shadow-lg rounded p-5 rotate-y-180'>
+                  <div className='flashcard-back absolute inset-0 flex items-center justify-center bg-[#04285a] text-[#dafada] border border-[#ccc] rounded p-5 rotate-y-180'>
                     <p className='text-lg font-semibold text-center overflow-y-auto max-h-[230px] cardSc'>
                       {card.answer}
                     </p>
@@ -164,7 +188,7 @@ export default function Flash() {
                         e.stopPropagation();
                         startEditing(card);
                       }}
-                      className='absolute bottom-2 left-2 bg-yellow-500 text-white text gap-2 p-1 rounded cursor-pointer flex flex-row items-center'>
+                      className='absolute bottom-2 left-2 bg-yellow-500 text-white text gap-2 p-1 rounded cursor-pointer hidden flex-row items-center flashBtn'>
                       <PenLine size={19} /> Edit
                     </button>
                     <button
@@ -172,7 +196,7 @@ export default function Flash() {
                         e.stopPropagation();
                         deleteFlashcard(card.id);
                       }}
-                      className='absolute bottom-2 right-2 bg-red-500 text-white text-xs p-1 rounded cursor-pointer'>
+                      className='absolute hidden bottom-2 right-2 bg-red-500 text-white text-xs p-1 rounded cursor-pointer flashBtn'>
                       <X />
                     </button>
                   </div>

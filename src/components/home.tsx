@@ -57,33 +57,38 @@ export default function HomeSec() {
                   title: 'Your Quest Log',
                   description: 'Record your tasks and visualize your journey.',
                   image: '/dash.jpg',
+                  lk: '/dashboard',
                 },
                 {
                   title: 'Knowledge Knockout',
                   description:
                     'Reinforce your understanding with dynamic quizzes.',
                   image: '/quizz.jpg',
+                  lk: '/',
                 },
                 {
                   title: 'Time Wrap Planner',
                   description:
                     'Schedule your your studies and bend time to your academic will for the week/month.',
                   image: '/studyplanner.jpg',
+                  lk: '/TimePage',
                 },
                 {
                   title: 'Leaderboard',
                   description: 'Every point counts in the pursuit of success.',
                   image: '/leadershipboard.jpg',
+                  lk: '/',
                 },
                 {
                   title: 'Memory Boost',
                   description:
                     'Supercharge your recall with flashcards. Rapidly absorb and retain crucial information.',
                   image: '/flashcards.jpg',
+                  lk: '/FlashPage',
                 },
               ].map((log, index) => (
                 <Link
-                  href='/FlashPage'
+                  href={log.lk}
                   key={index}
                   className='bg-gray-100 flex flex-col min-h-[305px] max-w-[280px] w-full items-center rounded-xl text-black py-[20px] px-[15px] gap-3 hover:shadow-xl cursor-pointer transition-all duration-300'>
                   <Image

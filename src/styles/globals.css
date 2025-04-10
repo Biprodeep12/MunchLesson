@@ -30,9 +30,69 @@ body {
 .cardSc::-webkit-scrollbar {
   width: 3px;
 }
-.cardSc::-webkit-scrollbar-track {
-}
 .cardSc::-webkit-scrollbar-thumb {
   background-color: rgb(141, 202, 141);
   border-radius: 10px;
+}
+.flashCont:hover .flashBtn {
+  display: flex;
+}
+.arBtn {
+  opacity: 0;
+  transform: translate(0, 20px);
+  animation: intextbtn 0.3s linear forwards;
+}
+
+.goBtn {
+  opacity: 1;
+  transform: translate(0, 0);
+  animation: outtextbtn 0.3s linear forwards;
+}
+
+@keyframes intextbtn {
+  from {
+    transform: translate(0, 20px);
+    opacity: 0;
+  }
+  to {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+}
+
+@keyframes outtextbtn {
+  from {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(0, 20px);
+    opacity: 0;
+  }
+}
+
+.mesCont {
+  scrollbar-width: none;
+}
+@media screen and (max-width: 500px) {
+  .aiBox {
+    bottom: 0;
+    margin-bottom: 0;
+    border-radius: 20px 20px 0 0;
+  }
+  .caut {
+    display: none;
+  }
+}
+@media screen and (max-width: 1350px) {
+  .mesCont {
+    margin-top: 60px;
+  }
+}
+@media screen and (max-width: 600px) {
+  .sid {
+    position: fixed;
+    z-index: 80;
+    background-color: #ffffff;
+  }
 }
