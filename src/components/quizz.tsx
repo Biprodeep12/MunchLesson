@@ -1,4 +1,9 @@
 import { useState } from 'react';
+import { setDoc, doc } from 'firebase/firestore';
+import { useAuth } from '@/context/AuthContext';
+import { db } from '@/firebase/firebase';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
 interface QuizQuestion {
   question: string;
@@ -26,6 +31,8 @@ export default function Quiz() {
   >({});
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [score, setScore] = useState<number | null>(null);
+
+  const { user } = useAuth();
 
   const fetchQuiz = async () => {
     if (!topic.trim()) {
@@ -69,8 +76,8 @@ export default function Quiz() {
     }));
   };
 
-  const handleSubmit = () => {
-    if (!quiz) return;
+  const handleSubmit = async () => {
+    if (!quiz || !user) return; // Ensure user is logged in
 
     let correctCount = 0;
     quiz.questions.forEach((question, index) => {
@@ -79,8 +86,22 @@ export default function Quiz() {
       }
     });
 
-    setScore(correctCount);
+    const finalScore = correctCount;
+    setScore(finalScore);
     setSubmitted(true);
+
+    try {
+      await setDoc(doc(db, 'score', user.uid), {
+        userId: user.uid,
+        topic: quiz.topic,
+        score: finalScore,
+        timestamp: new Date(),
+      });
+      console.log('✅ Score saved successfully');
+    } catch (err) {
+      console.error('❌ Error saving score:', err);
+      setError('Failed to save score.');
+    }
   };
 
   const resetQuiz = () => {
@@ -93,7 +114,12 @@ export default function Quiz() {
 
   return (
     <div className='p-4 max-w-2xl mx-auto min-h-screen'>
-      <h1 className='text-2xl font-bold mb-4'>Quiz Generator</h1>
+      <Link
+        href='/dashboard'
+        className='absolute left-5 top-5 lg:top-7 border border-[#ccc] rounded p-1'>
+        <ArrowLeft />
+      </Link>
+      <h1 className='text-2xl font-bold mb-4 text-center'>Quiz Generator</h1>
 
       {!quiz ? (
         <div className='mb-6'>
