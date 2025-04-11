@@ -109,7 +109,7 @@ export default function Time() {
   };
 
   return (
-    <div className='min-h-screen flex flex-row px-5 pt-20 pb-5 items-start gap-5'>
+    <div className='min-h-screen flex flex-row flex-wrap px-5 pt-20 pb-5 items-start justify-center gap-5'>
       <Link
         href='/dashboard'
         className='absolute left-5 top-5 border border-[#ccc] rounded p-1'>
@@ -173,7 +173,7 @@ export default function Time() {
         </div>
       </div>
 
-      <div className='border border-[#ccc] rounded-xl p-4 flex flex-col gap-2 max-w-[400px] w-full max-h-[366px]'>
+      <div className='border border-[#ccc] rounded-xl p-4 flex flex-col gap-2 max-w-[400px] w-full h-[366px] max-h-[366px]'>
         <div className='text-2xl font-bold'>To-do List</div>
         <div className='flex flex-row gap-2'>
           <input
@@ -195,7 +195,7 @@ export default function Time() {
           {tasks.map((task) => (
             <div
               key={task.id}
-              className='flex justify-between items-center border p-2 rounded bg-white'>
+              className='flex justify-between items-center border p-2 rounded bg-white min-h-[51px]'>
               <div className='flex items-center gap-2'>
                 <button
                   className={`p-1 rounded-full ${
@@ -218,6 +218,8 @@ export default function Time() {
           ))}
         </div>
       </div>
+
+      <div className='border border-[#ccc] rounded-xl p-4 flex flex-col gap-2 max-w-[400px] w-full h-[366px]'></div>
     </div>
   );
 }

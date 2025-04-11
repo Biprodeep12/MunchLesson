@@ -21,7 +21,7 @@ export default function Nav() {
   return (
     <>
       <nav className='bg-[#04285a] items-center flex justify-center'>
-        <div className='max-w-[1440px] w-full items-center flex pt-[10px] pb-[15px] sm:px-10 px-5 gap-5'>
+        <div className='max-w-[1440px] w-full items-center flex pt-[5px] pb-[10px] sm:px-10 px-5 gap-5'>
           <Image src='/studymunch_logo.jpg' width={65} height={65} alt='Logo' />
           <Link href='/' className='sm:text-3xl text-2xl font-bold text-white'>
             StudyMunch
