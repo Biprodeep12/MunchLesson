@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+const API_KEY = process.env.NEXT_PUBLIC_API_FEED_KEY;
 const API_URL = 'https://openrouter.ai/api/v1/chat/completions';
 
 type OptionKey = 'A' | 'B' | 'C' | 'D';
@@ -43,7 +43,7 @@ function isQuizQuestion(obj: unknown): obj is QuizQuestion {
     isOptions(question.options) &&
     typeof question.correctAnswer === 'string' &&
     isOptionKey(question.correctAnswer) &&
-    typeof question.feedback === 'string' // 👈 ensure feedback exists
+    typeof question.feedback === 'string'
   );
 }
 
@@ -134,7 +134,7 @@ RULES:
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: 'anthropic/claude-3-haiku',
+            model: 'nvidia/llama-3.1-nemotron-nano-8b-v1:free',
             messages: [
               {
                 role: 'system',

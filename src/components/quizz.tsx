@@ -181,7 +181,7 @@ export default function Quiz() {
           </div>
         </>
       ) : (
-        <div className='flex flex-col items-center'>
+        <div className='flex flex-col items-center px-2'>
           <div className='flex justify-between items-center mb-4 max-w-[800px] w-full'>
             <h2 className='text-xl font-bold'>{quiz.topic} Quiz</h2>
             <button
@@ -195,7 +195,7 @@ export default function Quiz() {
             {quiz.questions.map((question, index) => (
               <div
                 key={index}
-                className='bg-white/80 shadow-sm max-w-[800px] w-full m-auto transition-all rounded-2xl overflow-hidden p-6 mb-6'>
+                className='bg-white/80 shadow-sm max-w-[800px] w-full  transition-all rounded-2xl overflow-hidden p-6 mb-6'>
                 <p className='font-semibold mb-3'>
                   {index + 1}. {question.question}
                 </p>
