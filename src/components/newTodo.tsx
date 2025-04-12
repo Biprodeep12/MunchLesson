@@ -71,10 +71,10 @@ const TodoList: React.FC = () => {
       </Link>
       <div className='max-w-4xl mx-auto'>
         <h1 className='text-5xl font-bold text-center text-amber-800 mb-6 flex flex-row items-center justify-center gap-3'>
-          <ListChecks size={45} /> To-Do List
+          <ListChecks size={45} /> Quest Log
         </h1>
         <p className='text-center text-lg text-yellow-900 mb-10'>
-          Stay organized and complete your tasks with style! ✨
+          Outline your next steps with a todo list ✨
         </p>
 
         <div className='flex justify-center mb-6'>
