@@ -78,3 +78,6 @@ body {
 .rotate-y-180 {
   transform: rotateY(180deg);
 }
+.contbtnfs:hover .btnfs {
+  opacity: 100;
+}

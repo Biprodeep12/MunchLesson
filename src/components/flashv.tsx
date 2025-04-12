@@ -113,7 +113,7 @@ export default function FlashcardApp() {
         <ArrowLeft />
       </Link>
       <div className='max-w-6xl mx-auto flex flex-col md:flex-row gap-10'>
-        <div className='sticky top-[20px] bg-white bg-opacity-70 backdrop-blur-md p-8 rounded-3xl shadow-2xl max-w-[500px] w-full'>
+        <div className='sticky top-[60px] bg-white bg-opacity-70 backdrop-blur-md p-8 rounded-3xl shadow-2xl max-w-[500px] max-h-[600px] w-full'>
           <h1 className='text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#FF5F6D] to-[#FFC371] mb-4'>
             Memory Boost
           </h1>
@@ -173,11 +173,11 @@ export default function FlashcardApp() {
                     className={`relative w-full h-full transition-transform duration-700 preserve-3d ${
                       flipped[card.id] ? 'rotate-y-180' : ''
                     }`}>
-                    <div className='absolute inset-0 backface-hidden bg-white rounded-xl shadow-xl p-5 flex flex-col justify-between'>
+                    <div className='absolute inset-0 backface-hidden bg-white rounded-xl shadow-xl p-5 flex flex-col justify-between contbtnfs'>
                       <p className='text-center text-lg font-medium overflow-auto max-h-[180px]'>
                         {card.question}
                       </p>
-                      <div className='flex justify-between mt-4 opacity-0 group-hover:opacity-100 transition'>
+                      <div className='flex justify-between mt-4 opacity-0 transition btnfs'>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
@@ -197,11 +197,11 @@ export default function FlashcardApp() {
                       </div>
                     </div>
 
-                    <div className='absolute inset-0 backface-hidden rotate-y-180 bg-[#333] text-white rounded-xl shadow-xl p-5 flex flex-col justify-between'>
+                    <div className='absolute inset-0 backface-hidden rotate-y-180 bg-[#333] text-white rounded-xl shadow-xl p-5 flex flex-col justify-between contbtnfs'>
                       <p className='text-center text-lg font-medium overflow-auto max-h-[180px]'>
                         {card.answer}
                       </p>
-                      <div className='flex justify-between mt-4 opacity-0 group-hover:opacity-100 transition'>
+                      <div className='flex justify-between mt-4 opacity-0 transition btnfs'>
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
