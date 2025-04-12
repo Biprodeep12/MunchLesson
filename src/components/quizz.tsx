@@ -113,31 +113,32 @@ export default function Quiz() {
   };
 
   return (
-    <div className='p-4 max-w-2xl mx-auto min-h-screen'>
+    <div className='min-h-screen bg-gradient-to-br from-[#FFDEE9] to-[#B5FFFC] transition-colors duration-300'>
       <Link
-        href='/dashboard'
+        href='/'
         className='absolute left-5 top-5 lg:top-7 border border-[#ccc] rounded p-1'>
         <ArrowLeft />
       </Link>
       <h1 className='text-2xl font-bold mb-4 text-center'>Quiz Generator</h1>
-
       {!quiz ? (
-        <div className='mb-6'>
-          <input
-            type='text'
-            value={topic}
-            onChange={(e) => setTopic(e.target.value)}
-            placeholder='Enter quiz topic...'
-            className='border p-2 w-full rounded'
-            onKeyDown={(e) => e.key === 'Enter' && fetchQuiz()}
-          />
-          <button
-            onClick={fetchQuiz}
-            className='bg-blue-500 hover:bg-blue-600 text-white p-2 mt-2 rounded w-full'
-            disabled={loading}>
-            {loading ? 'Generating...' : 'Generate Quiz'}
-          </button>
-        </div>
+        <>
+          <div className='mb-6'>
+            <input
+              type='text'
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              placeholder='Enter quiz topic...'
+              className='border p-2 w-full rounded'
+              onKeyDown={(e) => e.key === 'Enter' && fetchQuiz()}
+            />
+            <button
+              onClick={fetchQuiz}
+              className='bg-blue-500 hover:bg-blue-600 text-white p-2 mt-2 rounded w-full'
+              disabled={loading}>
+              {loading ? 'Generating...' : 'Generate Quiz'}
+            </button>
+          </div>
+        </>
       ) : (
         <div>
           <div className='flex justify-between items-center mb-4'>
