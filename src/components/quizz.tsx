@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { setDoc, doc } from 'firebase/firestore';
+import { setDoc, doc, getDoc } from 'firebase/firestore';
 import { useAuth } from '@/context/AuthContext';
 import { db } from '@/firebase/firebase';
 import Link from 'next/link';
@@ -77,7 +77,7 @@ export default function Quiz() {
   };
 
   const handleSubmit = async () => {
-    if (!quiz || !user) return; // Ensure user is logged in
+    if (!quiz || !user) return;
 
     let correctCount = 0;
     quiz.questions.forEach((question, index) => {
@@ -91,13 +91,28 @@ export default function Quiz() {
     setSubmitted(true);
 
     try {
-      await setDoc(doc(db, 'score', user.uid), {
-        userId: user.uid,
-        topic: quiz.topic,
-        score: finalScore,
-        timestamp: new Date(),
-      });
-      console.log('✅ Score saved successfully');
+      const userDocRef = doc(db, 'score', user.uid);
+
+      // Fetch existing score (if any)
+      const existingDoc = await getDoc(userDocRef);
+      const previousScore = existingDoc.exists()
+        ? existingDoc.data().score || 0
+        : 0;
+
+      const updatedScore = previousScore + finalScore;
+
+      await setDoc(
+        userDocRef,
+        {
+          name: user.displayName || 'Anonymous',
+          photo: user.photoURL || '',
+          score: updatedScore,
+          lastUpdated: new Date(),
+        },
+        { merge: true },
+      );
+
+      console.log('✅ Cumulative score updated successfully');
     } catch (err) {
       console.error('❌ Error saving score:', err);
       setError('Failed to save score.');
@@ -119,40 +134,40 @@ export default function Quiz() {
         className='absolute left-5 top-5 lg:top-7 border border-[#ccc] rounded p-1'>
         <ArrowLeft />
       </Link>
-      <h1 className='text-2xl font-bold mb-4 text-center'>Quiz Generator</h1>
+      <h1 className='text-3xl font-bold py-5 text-center'>Quiz Generator</h1>
       {!quiz ? (
-        <>
-          <div className='mb-6'>
-            <input
-              type='text'
-              value={topic}
-              onChange={(e) => setTopic(e.target.value)}
-              placeholder='Enter quiz topic...'
-              className='border p-2 w-full rounded'
-              onKeyDown={(e) => e.key === 'Enter' && fetchQuiz()}
-            />
-            <button
-              onClick={fetchQuiz}
-              className='bg-blue-500 hover:bg-blue-600 text-white p-2 mt-2 rounded w-full'
-              disabled={loading}>
-              {loading ? 'Generating...' : 'Generate Quiz'}
-            </button>
-          </div>
-        </>
+        <div className='bg-white/80 shadow-sm max-w-[600px] w-full m-auto transition-all rounded-2xl overflow-hidden p-6 mb-6'>
+          <input
+            type='text'
+            value={topic}
+            onChange={(e) => setTopic(e.target.value)}
+            placeholder='Enter quiz topic...'
+            className='border-b outline-none border-[#ccc] p-2 w-full'
+            onKeyDown={(e) => e.key === 'Enter' && fetchQuiz()}
+          />
+          <button
+            onClick={fetchQuiz}
+            className='w-full mt-4 px-4 py-2 border border-[#FF6B6B] text-[#FF6B6B] hover:bg-[#FF6B6B]/10 rounded-xl transition-colors'
+            disabled={loading}>
+            {loading ? 'Generating...' : 'Generate Quiz'}
+          </button>
+        </div>
       ) : (
-        <div>
-          <div className='flex justify-between items-center mb-4'>
+        <div className='flex flex-col items-center'>
+          <div className='flex justify-between items-center mb-4 max-w-[800px] w-full'>
             <h2 className='text-xl font-bold'>{quiz.topic} Quiz</h2>
             <button
               onClick={resetQuiz}
-              className='bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded'>
+              className='px-4 py-2 border border-[#FF6B6B] text-[#FF6B6B] hover:bg-[#FF6B6B]/10 rounded-xl transition-colors'>
               New Quiz
             </button>
           </div>
 
           <div className='space-y-6'>
             {quiz.questions.map((question, index) => (
-              <div key={index} className='border p-4 rounded-lg'>
+              <div
+                key={index}
+                className='bg-white/80 shadow-sm max-w-[800px] w-full m-auto transition-all rounded-2xl overflow-hidden p-6 mb-6'>
                 <p className='font-semibold mb-3'>
                   {index + 1}. {question.question}
                 </p>
@@ -208,7 +223,7 @@ export default function Quiz() {
               disabled={
                 Object.keys(selectedAnswers).length !== quiz.questions.length
               }
-              className={`mt-6 p-3 rounded w-full ${
+              className={`my-6 p-3 rounded-xl w-full max-w-[800px] ${
                 Object.keys(selectedAnswers).length === quiz.questions.length
                   ? 'bg-green-500 hover:bg-green-600 text-white'
                   : 'bg-gray-300 cursor-not-allowed'
@@ -216,7 +231,7 @@ export default function Quiz() {
               Submit Answers
             </button>
           ) : (
-            <div className='mt-6 p-4 bg-blue-50 rounded-lg'>
+            <div className='my-6 p-4 bg-blue-50 rounded-lg flex flex-col items-center'>
               <h3 className='text-xl font-bold mb-2'>Quiz Results</h3>
               <p className='text-lg'>
                 Your score:{' '}

@@ -1,6 +1,4 @@
-'use client';
-
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import {
   Calendar,
@@ -14,15 +12,26 @@ import {
   Trophy,
   X,
   Sparkles,
+  Bot,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { signOut } from 'firebase/auth';
-import { auth } from '@/firebase/firebase';
+import { auth, db } from '@/firebase/firebase';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+
+interface Player {
+  name: string;
+  photo: string;
+  score: number;
+  uid: string;
+}
 
 export default function HomePage() {
   // const [activeTab, setActiveTab] = useState('all');
 
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user } = useAuth();
 
@@ -30,6 +39,31 @@ export default function HomePage() {
     await signOut(auth);
     window.location.reload();
   };
+
+  useEffect(() => {
+    const fetchScores = async () => {
+      try {
+        const scoreRef = collection(db, 'score');
+        const q = query(scoreRef, orderBy('score', 'desc'));
+        const snapshot = await getDocs(q);
+
+        const data: Player[] = snapshot.docs.map((doc) => ({
+          uid: doc.id,
+          name: doc.data().name || 'Anonymous',
+          photo: doc.data().photo || '/default-avatar.png',
+          score: doc.data().score || 0,
+        }));
+
+        setPlayers(data);
+      } catch (err) {
+        console.error('❌ Error fetching leaderboard:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchScores();
+  }, []);
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-[#FFDEE9] to-[#B5FFFC] transition-colors duration-300'>
@@ -95,6 +129,12 @@ export default function HomePage() {
                   className='flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-r hover:from-[#FF6B6B]/10 hover:to-[#FFD166]/10 text-gray-700 hover:text-[#FF6B6B] transition-colors'>
                   <CheckCircle className='h-5 w-5' />
                   <span>To-Do List</span>
+                </Link>
+                <Link
+                  href='/AiPage'
+                  className='flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-r hover:from-[#FF6B6B]/10 hover:to-[#FFD166]/10 text-gray-700 hover:text-[#FF6B6B] transition-colors'>
+                  <Bot className='h-5 w-5' />
+                  <span>Study AI</span>
                 </Link>
               </nav>
 
@@ -170,6 +210,12 @@ export default function HomePage() {
             className='flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-r hover:from-[#FF6B6B]/10 hover:to-[#FFD166]/10 text-gray-700 hover:text-[#FF6B6B] transition-colors'>
             <CheckCircle className='h-5 w-5' />
             <span>To-Do List</span>
+          </Link>
+          <Link
+            href='/AIPage'
+            className='flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-r hover:from-[#FF6B6B]/10 hover:to-[#FFD166]/10 text-gray-700 hover:text-[#FF6B6B] transition-colors'>
+            <Bot className='h-5 w-5' />
+            <span>Study AI</span>
           </Link>
         </nav>
 
@@ -419,96 +465,54 @@ export default function HomePage() {
           </div>
 
           <div className='bg-white/80 shadow-sm rounded-2xl overflow-hidden p-6'>
-            <div className='space-y-3'>
-              <div className='flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-[#FF6B6B]/10 to-[#FFD166]/10'>
-                <div className='flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#FFD166] text-white font-bold shadow-sm'>
-                  1
-                </div>
-                <div className='h-10 w-10 rounded-full overflow-hidden border-2 border-white shadow-sm'>
-                  <Image
-                    width={40}
-                    height={40}
-                    src='/placeholder.svg'
-                    alt='User'
-                    className='w-full h-full object-cover'
-                  />
-                </div>
-                <div className='flex-1'>
-                  <p className='font-medium text-gray-800'>Michael Johnson</p>
-                  <p className='text-xs text-gray-600'>Level 12</p>
-                </div>
-                <div className='flex items-center gap-1'>
-                  <Crown className='h-4 w-4 text-[#FFD166]' />
-                  <span className='font-bold text-gray-800'>2,450 XP</span>
-                </div>
-              </div>
+            {!loading && (
+              <div className='space-y-3'>
+                {players.slice(0, 3).map((player, index) => (
+                  <div
+                    key={index}
+                    className={`flex items-center gap-3 p-3 rounded-xl ${
+                      index === 0
+                        ? 'bg-gradient-to-r from-[#FF6B6B]/10 to-[#FFD166]/10'
+                        : 'hover:bg-[#f9fafb]'
+                    } transition-colors`}>
+                    <div
+                      className={`flex items-center justify-center w-8 h-8 rounded-full ${
+                        index === 0
+                          ? 'bg-gradient-to-br from-[#FF6B6B] to-[#FFD166] text-white'
+                          : 'bg-[#f0f0f0] text-[#FF6B6B]'
+                      } font-bold`}>
+                      {index + 1}
+                    </div>
 
-              <div className='flex items-center gap-3 p-3 rounded-xl hover:bg-[#f9fafb] transition-colors'>
-                <div className='flex items-center justify-center w-8 h-8 rounded-full bg-[#f0f0f0] text-[#FF6B6B] font-bold'>
-                  2
-                </div>
-                <div className='h-10 w-10 rounded-full overflow-hidden border-2 border-white shadow-sm'>
-                  <Image
-                    width={40}
-                    height={40}
-                    src='/placeholder.svg'
-                    alt='User'
-                    className='w-full h-full object-cover'
-                  />
-                </div>
-                <div className='flex-1'>
-                  <p className='font-medium text-gray-800'>Alex Smith</p>
-                  <p className='text-xs text-gray-600'>Level 11</p>
-                </div>
-                <div className='flex items-center gap-1'>
-                  <span className='font-bold text-gray-800'>2,320 XP</span>
-                </div>
-              </div>
+                    <div className='h-10 w-10 rounded-full overflow-hidden border-2 border-white shadow-sm'>
+                      <Image
+                        width={40}
+                        height={40}
+                        src={player.photo}
+                        alt={player.name}
+                        className='w-full h-full object-cover'
+                      />
+                    </div>
 
-              <div className='flex items-center gap-3 p-3 rounded-xl hover:bg-[#f9fafb] transition-colors'>
-                <div className='flex items-center justify-center w-8 h-8 rounded-full bg-[#f0f0f0] text-[#FF6B6B] font-bold'>
-                  3
-                </div>
-                <div className='h-10 w-10 rounded-full overflow-hidden border-2 border-white shadow-sm'>
-                  <Image
-                    width={40}
-                    height={40}
-                    src='/placeholder.svg'
-                    alt='User'
-                    className='w-full h-full object-cover'
-                  />
-                </div>
-                <div className='flex-1'>
-                  <p className='font-medium text-gray-800'>Lisa Wong</p>
-                  <p className='text-xs text-gray-600'>Level 10</p>
-                </div>
-                <div className='flex items-center gap-1'>
-                  <span className='font-bold text-gray-800'>2,105 XP</span>
-                </div>
-              </div>
+                    <div className='flex-1'>
+                      <p className='font-medium text-gray-800'>{player.name}</p>
+                      <p className='text-xs text-gray-600'>
+                        Level {Math.floor(player.score / 10)}
+                      </p>
+                    </div>
 
-              <div className='flex items-center gap-3 p-3 rounded-xl bg-[#f9fafb]'>
-                <div className='flex items-center justify-center w-8 h-8 rounded-full bg-[#f0f0f0] text-[#FF6B6B] font-bold'>
-                  7
-                </div>
-                <div className='h-10 w-10 rounded-full overflow-hidden border-2 border-white shadow-sm'>
-                  <Image
-                    width={40}
-                    height={40}
-                    src='/placeholder.svg'
-                    alt='User'
-                    className='w-full h-full object-cover'
-                  />
-                </div>
-                <div className='flex-1'>
-                  <p className='font-medium text-gray-800'>Jane Doe</p>
-                  <p className='text-xs text-gray-600'>Level 7</p>
-                </div>
-                <div className='flex items-center gap-1'>
-                  <span className='font-bold text-gray-800'>1,250 XP</span>
-                </div>
+                    <div className='flex items-center gap-1'>
+                      {index === 0 && (
+                        <Crown className='h-4 w-4 text-[#FFD166]' />
+                      )}
+                      <span className='font-bold text-gray-800'>
+                        {player.score * 10} XP
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
+            )}
           </div>
         </section>
       </main>

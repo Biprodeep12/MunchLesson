@@ -69,7 +69,7 @@ export default function Ai() {
       className={`h-screen w-full flex items-center relative
        flex-col ${isAi ? 'gap-2  justify-center' : 'justify-start'}`}>
       <Link
-        href='/dashboard'
+        href='/'
         className='absolute left-5 top-5 border border-[#ccc] rounded p-1'>
         <ArrowLeft />
       </Link>
