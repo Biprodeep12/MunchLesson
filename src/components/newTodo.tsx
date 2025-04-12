@@ -1,4 +1,9 @@
-import React, { useState } from 'react';
+import { ArrowLeft, ListChecks, Plus } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { db } from '@/firebase/firebase';
+import Link from 'next/link';
+import { useAuth } from '@/context/AuthContext';
 
 type Todo = {
   id: number;
@@ -9,51 +14,81 @@ type Todo = {
 const TodoList: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState<string>('');
+  const { user } = useAuth();
 
-  // Add new task
-  const addTodo = () => {
+  useEffect(() => {
+    const fetchTodos = async () => {
+      if (user?.uid) {
+        const docRef = doc(db, 'tasks', user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setTodos(docSnap.data().todos || []);
+        }
+      }
+    };
+
+    fetchTodos();
+  }, [user]);
+
+  const updateFirestoreTodos = async (updatedTodos: Todo[]) => {
+    if (!user?.uid) return;
+    const docRef = doc(db, 'tasks', user.uid);
+    await setDoc(docRef, { todos: updatedTodos }, { merge: true });
+  };
+
+  const addTodo = async () => {
     if (newTodo.trim()) {
-      setTodos([...todos, { id: Date.now(), text: newTodo, completed: false }]);
+      const updatedTodos = [
+        ...todos,
+        { id: Date.now(), text: newTodo, completed: false },
+      ];
+      setTodos(updatedTodos);
       setNewTodo('');
+      await updateFirestoreTodos(updatedTodos);
     }
   };
 
-  const toggleTodo = (id: number) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo,
-      ),
+  const toggleTodo = async (id: number) => {
+    const updatedTodos = todos.map((todo) =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo,
     );
+    setTodos(updatedTodos);
+    await updateFirestoreTodos(updatedTodos);
   };
 
-  // Delete task
-  const deleteTodo = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  const deleteTodo = async (id: number) => {
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedTodos);
+    await updateFirestoreTodos(updatedTodos);
   };
 
   return (
-    <div className='min-h-screen px-4 py-8 bg-gradient-to-br from-[#FFDEE9] to-[#B5FFFC]'>
+    <div className='min-h-screen px-4 py-8 bg-gradient-to-r from-orange-200 via-yellow-100 to-pink-300'>
+      <Link
+        href='/'
+        className='absolute left-5 top-5 lg:top-7 border border-[#ccc] rounded p-1'>
+        <ArrowLeft color='black' />
+      </Link>
       <div className='max-w-4xl mx-auto'>
-        <h1 className='text-5xl font-bold text-center text-black mb-6'>
-          📝 To-Do List
+        <h1 className='text-5xl font-bold text-center text-amber-800 mb-6 flex flex-row items-center justify-center gap-3'>
+          <ListChecks size={45} /> To-Do List
         </h1>
-        <p className='text-center text-lg text-black mb-10'>
+        <p className='text-center text-lg text-yellow-900 mb-10'>
           Stay organized and complete your tasks with style! ✨
         </p>
 
-        {/* Input & Button */}
         <div className='flex justify-center mb-6'>
           <input
             type='text'
             value={newTodo}
             onChange={(e) => setNewTodo(e.target.value)}
             placeholder='Add a new task...'
-            className='px-6 py-2 rounded-full w-3/4 text-sm text-gray-800 shadow-md border-2 border-white focus:outline-none focus:ring-2 focus:ring-indigo-500'
+            className='px-6 py-2 rounded w-3/4 text-sm text-gray-800 shadow-md border-2 border-white focus:outline-none focus:ring-2 focus:ring-indigo-500'
           />
           <button
             onClick={addTodo}
-            className='ml-4 px-6 py-2 bg-yellow-500 text-white rounded-full hover:bg-yellow-600 transition-all'>
-            Add Task
+            className='ml-4 px-6 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition-all'>
+            <Plus />
           </button>
         </div>
 

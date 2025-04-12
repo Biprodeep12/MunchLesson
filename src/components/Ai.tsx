@@ -66,7 +66,7 @@ export default function Ai() {
 
   return (
     <div
-      className={`h-screen w-full flex items-center relative
+      className={`h-screen w-full flex items-center relative bg-gradient-to-br from-[#FFDEE9] to-[#B5FFFC] transition-colors duration-300
        flex-col ${isAi ? 'gap-2  justify-center' : 'justify-start'}`}>
       <Link
         href='/'
@@ -114,7 +114,7 @@ export default function Ai() {
       <div
         className={`${
           isAi ? 'max-w-[480px]' : 'max-w-[680px] mt-auto'
-        }  transition-all duration-500 w-full border-[1px] border-[#c5c5c5] rounded-xl grid grid-rows-[auto_45px] mb-5 relative aiBox
+        }  transition-all duration-500 w-full border-[1px] bg-white/80 shadow-sm border-[#c5c5c5] rounded-xl grid grid-rows-[auto_45px] mb-5 relative aiBox
         `}>
         <button
           aria-label='Submit'
@@ -141,7 +141,7 @@ export default function Ai() {
       </div>
 
       {isAi && (
-        <div className='text-[#8686ff] font-bold max-w-[500px] text-center text-xl mx-1'>
+        <div className='text-[#FF6B6B] font-bold max-w-[500px] text-center text-xl mx-1'>
           Get instant help with any subject, track your progress, and master
           difficult concepts with our AI-powered study platform.
         </div>
