@@ -393,9 +393,11 @@ export default function HomePage() {
                 <div className='w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#FFD166] flex items-center justify-center mb-3 shadow-md'>
                   <CheckCircle className='h-6 w-6 text-white' />
                 </div>
-                <h3 className='font-medium text-gray-800 mb-1'>AI Quizzes</h3>
+                <h3 className='font-medium text-gray-800 mb-1'>
+                  Knowledge Knockout
+                </h3>
                 <p className='text-sm text-gray-600 mb-4'>
-                  Personalized quizzes based on your learning style
+                  Reinforce your understanding with dynamic quizes
                 </p>
                 <Link
                   href={user ? '/quizPage' : '/AuthPage'}
@@ -409,9 +411,12 @@ export default function HomePage() {
               <div className='w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#FFD166] flex items-center justify-center mb-3 shadow-md'>
                 <Calendar className='h-6 w-6 text-white' />
               </div>
-              <h3 className='font-medium text-gray-800 mb-1'>Study Planner</h3>
+              <h3 className='font-medium text-gray-800 mb-1'>
+                Time Wrap Planner
+              </h3>
               <p className='text-sm text-gray-600 mb-4'>
-                Optimize your study schedule with AI
+                Schedule your studies and bend time to your academic will for
+                the week/month
               </p>
               <Link
                 href={user ? '/plan' : '/AuthPage'}
@@ -424,9 +429,10 @@ export default function HomePage() {
               <div className='w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#FFD166] flex items-center justify-center mb-3 shadow-md'>
                 <FlashCard className='h-6 w-6 text-white' />
               </div>
-              <h3 className='font-medium text-gray-800 mb-1'>Flash Cards</h3>
+              <h3 className='font-medium text-gray-800 mb-1'>Memory Boost</h3>
               <p className='text-sm text-gray-600 mb-4'>
-                Create and review smart flash cards
+                Suppercharge you recall with flashcards. Rapidly absorb and
+                retain crusial information.
               </p>
               <Link
                 href={user ? '/FlashPage' : '/AuthPage'}
@@ -439,9 +445,9 @@ export default function HomePage() {
               <div className='w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#FFD166] flex items-center justify-center mb-3 shadow-md'>
                 <CheckCircle className='h-6 w-6 text-white' />
               </div>
-              <h3 className='font-medium text-gray-800 mb-1'>To-Do List</h3>
+              <h3 className='font-medium text-gray-800 mb-1'>Quest Log</h3>
               <p className='text-sm text-gray-600 mb-4'>
-                Gamified task management for students
+                Record your tasks and visualize your journey
               </p>
               <Link
                 href={user ? '/TodoPage' : '/AuthPage'}
