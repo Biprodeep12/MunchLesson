@@ -108,7 +108,7 @@ export default function HomePage() {
                   <span>Quizzes</span>
                 </Link>
                 <Link
-                  href='/pla'
+                  href='/plan'
                   className='flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-r hover:from-[#FF6B6B]/10 hover:to-[#FFD166]/10 text-gray-700 hover:text-[#FF6B6B] transition-colors'>
                   <Calendar className='h-5 w-5' />
                   <span>Study Planner</span>
@@ -189,7 +189,7 @@ export default function HomePage() {
             <span>Quizzes</span>
           </Link>
           <Link
-            href='/planner'
+            href='/plan'
             className='flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-r hover:from-[#FF6B6B]/10 hover:to-[#FFD166]/10 text-gray-700 hover:text-[#FF6B6B] transition-colors'>
             <Calendar className='h-5 w-5' />
             <span>Study Planner</span>
@@ -388,7 +388,7 @@ export default function HomePage() {
           </div>
 
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-            <Link href={user ? '/quizPage' : '/AuthPage'} className='block'>
+            <div className='block'>
               <div className='bg-white/80 shadow-sm hover:shadow-md transition-all hover:translate-y-[-2px] h-full rounded-2xl overflow-hidden p-6 flex flex-col items-center text-center'>
                 <div className='w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#FFD166] flex items-center justify-center mb-3 shadow-md'>
                   <CheckCircle className='h-6 w-6 text-white' />
@@ -397,15 +397,15 @@ export default function HomePage() {
                 <p className='text-sm text-gray-600 mb-4'>
                   Personalized quizzes based on your learning style
                 </p>
-                <button className='mt-auto px-4 py-2 border border-[#FF6B6B] text-[#FF6B6B] hover:bg-[#FF6B6B]/10 rounded-xl transition-colors'>
+                <Link
+                  href={user ? '/quizPage' : '/AuthPage'}
+                  className='mt-auto px-4 py-2 border border-[#FF6B6B] text-[#FF6B6B] hover:bg-[#FF6B6B]/10 rounded-xl transition-colors'>
                   Start Quiz
-                </button>
+                </Link>
               </div>
-            </Link>
+            </div>
 
-            <Link
-              href={user ? '/' : '/AuthPage'}
-              className='bg-white/80 shadow-sm hover:shadow-md transition-all hover:translate-y-[-2px] rounded-2xl overflow-hidden p-6 flex flex-col items-center text-center'>
+            <div className='bg-white/80 shadow-sm hover:shadow-md transition-all hover:translate-y-[-2px] rounded-2xl overflow-hidden p-6 flex flex-col items-center text-center'>
               <div className='w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#FFD166] flex items-center justify-center mb-3 shadow-md'>
                 <Calendar className='h-6 w-6 text-white' />
               </div>
@@ -413,14 +413,14 @@ export default function HomePage() {
               <p className='text-sm text-gray-600 mb-4'>
                 Optimize your study schedule with AI
               </p>
-              <button className='mt-auto px-4 py-2 border border-[#FF6B6B] text-[#FF6B6B] hover:bg-[#FF6B6B]/10 rounded-xl transition-colors'>
+              <Link
+                href={user ? '/plan' : '/AuthPage'}
+                className='mt-auto px-4 py-2 border border-[#FF6B6B] text-[#FF6B6B] hover:bg-[#FF6B6B]/10 rounded-xl transition-colors'>
                 Plan Studies
-              </button>
-            </Link>
+              </Link>
+            </div>
 
-            <Link
-              href={user ? '/FlashPage' : '/AuthPage'}
-              className='bg-white/80 shadow-sm hover:shadow-md transition-all hover:translate-y-[-2px] rounded-2xl overflow-hidden p-6 flex flex-col items-center text-center'>
+            <div className='bg-white/80 shadow-sm hover:shadow-md transition-all hover:translate-y-[-2px] rounded-2xl overflow-hidden p-6 flex flex-col items-center text-center'>
               <div className='w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#FFD166] flex items-center justify-center mb-3 shadow-md'>
                 <FlashCard className='h-6 w-6 text-white' />
               </div>
@@ -428,14 +428,14 @@ export default function HomePage() {
               <p className='text-sm text-gray-600 mb-4'>
                 Create and review smart flash cards
               </p>
-              <button className='mt-auto px-4 py-2 border border-[#FF6B6B] text-[#FF6B6B] hover:bg-[#FF6B6B]/10 rounded-xl transition-colors'>
+              <Link
+                href={user ? '/FlashPage' : '/AuthPage'}
+                className='mt-auto px-4 py-2 border border-[#FF6B6B] text-[#FF6B6B] hover:bg-[#FF6B6B]/10 rounded-xl transition-colors'>
                 View Cards
-              </button>
-            </Link>
+              </Link>
+            </div>
 
-            <Link
-              href={user ? '/TodoPage' : '/AuthPage'}
-              className='bg-white/80 shadow-sm hover:shadow-md transition-all hover:translate-y-[-2px] rounded-2xl overflow-hidden p-6 flex flex-col items-center text-center'>
+            <div className='bg-white/80 shadow-sm hover:shadow-md transition-all hover:translate-y-[-2px] rounded-2xl overflow-hidden p-6 flex flex-col items-center text-center'>
               <div className='w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#FFD166] flex items-center justify-center mb-3 shadow-md'>
                 <CheckCircle className='h-6 w-6 text-white' />
               </div>
@@ -443,10 +443,12 @@ export default function HomePage() {
               <p className='text-sm text-gray-600 mb-4'>
                 Gamified task management for students
               </p>
-              <button className='mt-auto px-4 py-2 border border-[#FF6B6B] text-[#FF6B6B] hover:bg-[#FF6B6B]/10 rounded-xl transition-colors'>
+              <Link
+                href={user ? '/TodoPage' : '/AuthPage'}
+                className='mt-auto px-4 py-2 border border-[#FF6B6B] text-[#FF6B6B] hover:bg-[#FF6B6B]/10 rounded-xl transition-colors'>
                 Manage Tasks
-              </button>
-            </Link>
+              </Link>
+            </div>
           </div>
         </section>
 
