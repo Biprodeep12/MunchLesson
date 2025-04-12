@@ -28,7 +28,7 @@ export default function Lead() {
         const data: Player[] = snapshot.docs.map((doc) => ({
           uid: doc.id,
           name: doc.data().name || 'Anonymous',
-          photo: doc.data().photo || '/default-avatar.png', // fallback avatar
+          photo: doc.data().photo || '/default-avatar.png',
           score: doc.data().score || 0,
         }));
 
@@ -44,23 +44,23 @@ export default function Lead() {
   }, []);
 
   return (
-    <div className='min-h-screen px-4 py-8 bg-gradient-to-r from-indigo-500 via-purple-600 to-pink-500'>
+    <div className='min-h-screen px-4 py-8 bg-gradient-to-br from-[#FFDEE9] to-[#B5FFFC] '>
       <Link
         href='/'
         className='absolute left-5 top-5 lg:top-7 border border-[#ccc] rounded p-1'>
         <ArrowLeft color='white' />
       </Link>
       <div className='max-w-4xl mx-auto'>
-        <h1 className='text-5xl font-bold text-center text-white mb-4'>
+        <h1 className='text-5xl font-bold text-center text-[#FF6B6B] mb-4'>
           🏆 Leaderboard
         </h1>
-        <p className='text-center text-lg text-white mb-8'>
+        <p className='text-center text-lg text-[#FF6B6B] mb-8'>
           Reach the top and shine with XP! ✨
         </p>
 
         {/* Leaderboard Table */}
         <div className='bg-white rounded-2xl shadow-2xl overflow-hidden'>
-          <div className='flex flex-row gap-4 justify-evenly bg-gradient-to-r from-teal-100 to-blue-200 p-4 text-sm font-bold text-gray-700'>
+          <div className='flex flex-row gap-4 justify-evenly bg-gradient-to-r from-[#FF6B6B] to-[#FFD166] p-4 text-sm font-bold text-gray-700'>
             <div>Rank</div>
             <div>Player</div>
             <div>XP</div>

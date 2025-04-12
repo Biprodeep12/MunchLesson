@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import {
   Calendar,
   CheckCircle,
@@ -194,7 +195,7 @@ export default function HomePage() {
             <span>Study Planner</span>
           </Link>
           <Link
-            href='/flashcards'
+            href='/FlashPage'
             className='flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-r hover:from-[#FF6B6B]/10 hover:to-[#FFD166]/10 text-gray-700 hover:text-[#FF6B6B] transition-colors'>
             <FlashCard className='h-5 w-5' />
             <span>Flash Cards</span>
@@ -206,7 +207,7 @@ export default function HomePage() {
             <span>Leaderboard</span>
           </Link>
           <Link
-            href='/todo'
+            href='/TodoPage'
             className='flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-r hover:from-[#FF6B6B]/10 hover:to-[#FFD166]/10 text-gray-700 hover:text-[#FF6B6B] transition-colors'>
             <CheckCircle className='h-5 w-5' />
             <span>To-Do List</span>
@@ -291,24 +292,17 @@ export default function HomePage() {
               </p>
               <div className='flex flex-col sm:flex-row gap-3'>
                 <Link
-                  href={user ? '/AiPage' : '/AuthPage'}
+                  href={user ? '/AIPage' : '/AuthPage'}
                   className='px-4 py-2 bg-white hover:bg-white/90 text-[#FF6B6B] font-medium rounded-xl transition-colors'>
                   Continue Learning
-                </Link>
-                <Link
-                  href={user ? '/quizz' : '/AuthPage'}
-                  className='px-4 py-2 bg-transparent hover:bg-white/10 text-white border border-white/30 font-medium rounded-xl transition-colors'>
-                  Take a Quiz
                 </Link>
               </div>
             </div>
             <div className='w-full md:w-auto'>
-              <Image
-                width={200}
-                height={200}
-                src='/placeholder.svg'
-                alt='Learning Illustration'
-                className='w-full max-w-[200px] mx-auto'
+              <DotLottieReact
+                src='https://lottie.host/b0e1c285-2750-4d76-94dd-956d75e03837/Rcy1wPoU4K.lottie'
+                loop
+                autoplay
               />
             </div>
           </div>
@@ -394,7 +388,7 @@ export default function HomePage() {
           </div>
 
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>
-            <Link href={user ? '/quizz' : '/AuthPage'} className='block'>
+            <Link href={user ? '/quizPage' : '/AuthPage'} className='block'>
               <div className='bg-white/80 shadow-sm hover:shadow-md transition-all hover:translate-y-[-2px] h-full rounded-2xl overflow-hidden p-6 flex flex-col items-center text-center'>
                 <div className='w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#FFD166] flex items-center justify-center mb-3 shadow-md'>
                   <CheckCircle className='h-6 w-6 text-white' />
@@ -440,7 +434,7 @@ export default function HomePage() {
             </Link>
 
             <Link
-              href={user ? '/todoPage' : '/AuthPage'}
+              href={user ? '/TodoPage' : '/AuthPage'}
               className='bg-white/80 shadow-sm hover:shadow-md transition-all hover:translate-y-[-2px] rounded-2xl overflow-hidden p-6 flex flex-col items-center text-center'>
               <div className='w-12 h-12 rounded-full bg-gradient-to-br from-[#FF6B6B] to-[#FFD166] flex items-center justify-center mb-3 shadow-md'>
                 <CheckCircle className='h-6 w-6 text-white' />
@@ -459,9 +453,11 @@ export default function HomePage() {
         <section>
           <div className='flex items-center justify-between mb-4'>
             <h2 className='text-xl font-bold text-gray-800'>Leaderboard</h2>
-            <button className='text-[#FF6B6B] hover:underline'>
+            <Link
+              href='/leaderboard'
+              className='text-[#FF6B6B] hover:underline'>
               View Full Leaderboard
-            </button>
+            </Link>
           </div>
 
           <div className='bg-white/80 shadow-sm rounded-2xl overflow-hidden p-6'>
