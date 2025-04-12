@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { db } from '@/firebase/firebase';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 interface QuizQuestion {
   question: string;
@@ -14,6 +15,7 @@ interface QuizQuestion {
     D: string;
   };
   correctAnswer: 'A' | 'B' | 'C' | 'D';
+  feedback: string;
 }
 
 interface QuizResponse {
@@ -29,6 +31,7 @@ export default function Quiz() {
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<number, string>
   >({});
+
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [score, setScore] = useState<number | null>(null);
 
@@ -80,9 +83,19 @@ export default function Quiz() {
     if (!quiz || !user) return;
 
     let correctCount = 0;
+    const feedbackMap: Record<number, string> = {};
+
     quiz.questions.forEach((question, index) => {
-      if (selectedAnswers[index] === question.correctAnswer) {
+      const selected = selectedAnswers[index];
+      const isCorrect = selected === question.correctAnswer;
+
+      if (isCorrect) {
         correctCount++;
+        feedbackMap[index] = '✅ Great job! That’s correct.';
+      } else {
+        feedbackMap[
+          index
+        ] = `❌ Oops! The correct answer was ${question.correctAnswer}.`;
       }
     });
 
@@ -92,13 +105,10 @@ export default function Quiz() {
 
     try {
       const userDocRef = doc(db, 'score', user.uid);
-
-      // Fetch existing score (if any)
       const existingDoc = await getDoc(userDocRef);
       const previousScore = existingDoc.exists()
         ? existingDoc.data().score || 0
         : 0;
-
       const updatedScore = previousScore + finalScore;
 
       await setDoc(
@@ -136,22 +146,40 @@ export default function Quiz() {
       </Link>
       <h1 className='text-3xl font-bold py-5 text-center'>Quiz Generator</h1>
       {!quiz ? (
-        <div className='bg-white/80 shadow-sm max-w-[600px] w-full m-auto transition-all rounded-2xl overflow-hidden p-6 mb-6'>
-          <input
-            type='text'
-            value={topic}
-            onChange={(e) => setTopic(e.target.value)}
-            placeholder='Enter quiz topic...'
-            className='border-b outline-none border-[#ccc] p-2 w-full'
-            onKeyDown={(e) => e.key === 'Enter' && fetchQuiz()}
-          />
-          <button
-            onClick={fetchQuiz}
-            className='w-full mt-4 px-4 py-2 border border-[#FF6B6B] text-[#FF6B6B] hover:bg-[#FF6B6B]/10 rounded-xl transition-colors'
-            disabled={loading}>
-            {loading ? 'Generating...' : 'Generate Quiz'}
-          </button>
-        </div>
+        <>
+          <div className='bg-white/80 shadow-sm max-w-[600px] w-full m-auto transition-all rounded-2xl overflow-hidden p-6 mb-6'>
+            <input
+              type='text'
+              value={topic}
+              onChange={(e) => setTopic(e.target.value)}
+              placeholder='Enter quiz topic...'
+              className='border-b outline-none border-[#ccc] p-2 w-full'
+              onKeyDown={(e) => e.key === 'Enter' && fetchQuiz()}
+            />
+            <button
+              onClick={fetchQuiz}
+              className='w-full mt-4 px-4 py-2 border border-[#FF6B6B] text-[#FF6B6B] hover:bg-[#FF6B6B]/10 rounded-xl transition-colors'
+              disabled={loading}>
+              {loading ? 'Generating...' : 'Generate Quiz'}
+            </button>
+          </div>
+          <div className='bg-white/80 shadow-sm max-w-[600px] w-full m-auto transition-all rounded-2xl overflow-hidden p-6 mb-6'>
+            <DotLottieReact
+              src='https://lottie.host/eb78b54d-abf8-498e-875d-b03f87328d6c/SE9exo8M0C.lottie'
+              loop
+              autoplay
+            />
+            <div className='italic text-gray-500 text-center'>
+              🔍 <b>Quiz Info:</b> This AI-generated quiz contains 10
+              multiple-choice questions, each worth 5 points. Every question has
+              4 options and no time limit. While rare, some questions or answers
+              may have inaccuracies. Instant feedback will be provided after
+              submission.
+              <br />
+              🧠 Enter a topic above to generate your quiz!
+            </div>
+          </div>
+        </>
       ) : (
         <div className='flex flex-col items-center'>
           <div className='flex justify-between items-center mb-4 max-w-[800px] w-full'>
@@ -171,6 +199,7 @@ export default function Quiz() {
                 <p className='font-semibold mb-3'>
                   {index + 1}. {question.question}
                 </p>
+
                 <div className='space-y-2'>
                   {Object.entries(question.options).map(([key, value]) => (
                     <div key={key} className='flex items-center'>
@@ -201,6 +230,7 @@ export default function Quiz() {
                     </div>
                   ))}
                 </div>
+
                 {submitted && (
                   <p
                     className={`mt-2 text-sm ${
@@ -212,6 +242,12 @@ export default function Quiz() {
                       ? '✓ Correct'
                       : `✗ Correct answer: ${question.correctAnswer}`}
                   </p>
+                )}
+
+                {submitted && question.feedback && (
+                  <div className='mt-2 text-sm italic text-gray-700'>
+                    {question.feedback}
+                  </div>
                 )}
               </div>
             ))}

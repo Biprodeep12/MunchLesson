@@ -10,6 +10,7 @@ interface QuizQuestion {
   question: string;
   options: Options;
   correctAnswer: OptionKey;
+  feedback: string;
 }
 
 interface QuizData {
@@ -41,7 +42,8 @@ function isQuizQuestion(obj: unknown): obj is QuizQuestion {
     typeof question.question === 'string' &&
     isOptions(question.options) &&
     typeof question.correctAnswer === 'string' &&
-    isOptionKey(question.correctAnswer)
+    isOptionKey(question.correctAnswer) &&
+    typeof question.feedback === 'string' // 👈 ensure feedback exists
   );
 }
 
@@ -103,7 +105,8 @@ export default async function handler(
         "C": "Option C text",
         "D": "Option D text"
       },
-      "correctAnswer": "A"
+      "correctAnswer": "A",
+      "feedback": "Short explanation of why this answer is correct and others are not"
     }
     // 9 more questions...
   ]
@@ -114,8 +117,9 @@ RULES:
 2. Use double quotes for all strings
 3. Include exactly 10 questions
 4. correctAnswer must be A, B, C, or D
-5. No markdown code blocks
-6. No additional text or explanations`;
+5. Each question must include a "feedback" field
+6. No markdown code blocks
+7. No additional text or explanations`;
 
     let retries = 0;
     const maxRetries = 2;
