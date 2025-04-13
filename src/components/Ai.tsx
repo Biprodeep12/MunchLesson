@@ -1,9 +1,14 @@
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ChevronDown, Mic } from 'lucide-react';
 import Link from 'next/link';
 import { MoveRight } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { markdown } from 'markdown';
+
+const SpeechRecognitionAPI: typeof SpeechRecognition | undefined =
+  typeof window !== 'undefined'
+    ? window.SpeechRecognition || window.webkitSpeechRecognition
+    : undefined;
 
 export default function Ai() {
   const router = useRouter();
@@ -15,8 +20,70 @@ export default function Ai() {
   const [messages, setMessages] = useState<
     { role: 'user' | 'assistant'; content: string }[]
   >([]);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const [microphones, setMicrophones] = useState<MediaDeviceInfo[]>([]);
+  const [selectedMic, setSelectedMic] = useState<string | null>(null);
+  const mediaStreamRef = useRef<MediaStream | null>(null);
+  const [micDisplay, setMicDisplay] = useState(false);
   const [isAi, setIsAi] = useState(true);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!navigator.mediaDevices?.enumerateDevices) {
+      console.warn('Media Devices API not supported');
+      return;
+    }
+
+    navigator.mediaDevices.enumerateDevices().then((devices) => {
+      const mics = devices.filter((device) => device.kind === 'audioinput');
+      setMicrophones(mics);
+      if (mics.length > 0) setSelectedMic(mics[0].deviceId);
+    });
+  }, []);
+
+  const startListening = async () => {
+    if (!SpeechRecognitionAPI) {
+      alert('Speech recognition is not supported in this browser.');
+      return;
+    }
+
+    try {
+      if (mediaStreamRef.current) {
+        mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: { deviceId: selectedMic ? { exact: selectedMic } : undefined },
+      });
+      mediaStreamRef.current = stream;
+
+      const recognition = new SpeechRecognitionAPI();
+      recognition.lang = 'en-US';
+      recognition.interimResults = false;
+      recognition.continuous = false;
+
+      recognition.onstart = () => setIsListening(true);
+      recognition.onend = () => setIsListening(false);
+      recognition.onerror = (event) =>
+        console.error('Speech error:', event.error);
+
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
+        const transcript = event.results[0][0].transcript.trim();
+        setText((prev) => (prev ? `${prev} ${transcript}` : transcript));
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+    }
+  };
+
+  const stopListening = () => {
+    recognitionRef.current?.stop();
+    setIsListening(false);
+  };
 
   useEffect(() => {
     if (question && typeof question === 'string' && messages.length === 0) {
@@ -181,6 +248,33 @@ export default function Ai() {
           className='outline-none p-4 pr-25 min-h-[80px] resize-none overflow-hidden aiArea'
           placeholder='How can your StudyBuddy help you today?'
         />
+        <div className='flex flex-row px-3 pb-3'>
+          <button
+            aria-label={isListening ? 'Stop Listening' : 'Start Listening'}
+            onClick={isListening ? stopListening : startListening}
+            className={`cursor-pointer px-2 rounded ml-auto flex items-center justify-center relative micCont ${
+              isListening ? 'bg-red-500' : 'bg-blue-500'
+            }`}>
+            <Mic color='white' className='mic' />
+            <div
+              className='absolute bg-blue-500 -right-2 -bottom-2 border-2 border-white rounded-2xl z-10'
+              onClick={() => setMicDisplay((prev) => !prev)}>
+              <ChevronDown color='white' size={17} />
+            </div>
+            {micDisplay && (
+              <select
+                className='-bottom-[35px] border border-[#ccc] bg-white rounded px-2 py-1 text-sm absolute micSel'
+                onChange={(e) => setSelectedMic(e.target.value)}
+                value={selectedMic || ''}>
+                {microphones.map((mic) => (
+                  <option key={mic.deviceId} value={mic.deviceId}>
+                    {mic.label || `Microphone ${microphones.indexOf(mic) + 1}`}
+                  </option>
+                ))}
+              </select>
+            )}
+          </button>
+        </div>
       </div>
 
       {isAi && (

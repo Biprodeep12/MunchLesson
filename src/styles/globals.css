@@ -81,3 +81,24 @@ body {
 .contbtnfs:hover .btnfs {
   opacity: 100;
 }
+.micCont:hover .mic {
+  animation: cim 1s ease forwards;
+}
+
+@keyframes cim {
+  0% {
+    transform: rotate(0);
+  }
+  25% {
+    transform: rotate(-25deg);
+  }
+  50% {
+    transform: rotate(25deg);
+  }
+  75% {
+    transform: rotate(-25deg);
+  }
+  100% {
+    transform: rotate(0);
+  }
+}
