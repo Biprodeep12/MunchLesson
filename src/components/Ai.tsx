@@ -106,14 +106,14 @@ export default function Ai() {
 
   return (
     <div
-      className={`h-screen w-full flex items-center relative bg-gradient-to-br from-[#FFDEE9] to-[#B5FFFC] transition-colors duration-300
+      className={`h-screen w-full flex items-center relative bg-gradient-to-br from-[#dcb34d] to-[#84dea8] transition-colors duration-300
        flex-col ${isAi ? 'gap-2  justify-center' : 'justify-start'}`}>
       <Link
         href='/'
         className='absolute left-5 top-5 border border-[#ccc] rounded p-1'>
         <ArrowLeft />
       </Link>
-      <div className='absolute text-2xl font-bold top-5 left-20'>Study Ai</div>
+      <div className='absolute text-2xl font-bold top-5 left-20'>Study AI</div>
       {isAi ? (
         <>
           <div className='text-5xl font-bold text-center mx-1'>
@@ -184,7 +184,7 @@ export default function Ai() {
       </div>
 
       {isAi && (
-        <div className='text-[#FF6B6B] font-bold max-w-[500px] text-center text-xl mx-1'>
+        <div className='text-[#011416] font-bold max-w-[500px] text-center text-xl mx-1'>
           Get instant help with any subject, track your progress, and master
           difficult concepts with our AI-powered study platform.
         </div>

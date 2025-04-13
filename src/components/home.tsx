@@ -371,7 +371,8 @@ export default function HomePage() {
                 Hey {user ? user?.displayName : 'User'} ✨
               </h1>
               <p className='text-white/90 mb-6'>
-                Ready to level up your brain with AI-powered study tools?
+                Get smarter, faster. Your personalised path to academic Success
+                starts here with StudyMunch
               </p>
               <div className='flex flex-col sm:flex-row gap-3'>
                 <Link
@@ -472,8 +473,11 @@ export default function HomePage() {
         </section>
 
         <section className='mb-8'>
-          <div className='flex items-center justify-between mb-4'>
-            <h2 className='text-xl font-bold text-gray-800'>Study Tools</h2>
+          <div className='flex items-center justify-center mb-4'>
+            <h2 className='text-xl font-bold text-gray-800'>
+              Tired of Study Chaos? Unleash Your Superpower with Our Expanded
+              Features...
+            </h2>
           </div>
 
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4'>

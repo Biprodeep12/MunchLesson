@@ -173,7 +173,7 @@ export default function FlashcardApp() {
                     className={`relative w-full h-full transition-transform duration-700 preserve-3d ${
                       flipped[card.id] ? 'rotate-y-180' : ''
                     }`}>
-                    <div className='absolute inset-0 backface-hidden bg-white rounded-xl shadow-xl p-5 flex flex-col justify-between contbtnfs'>
+                    <div className='absolute inset-0 backface-hidden bg-yellow-200 rounded-xl shadow-xl p-5 flex flex-col justify-between contbtnfs'>
                       <p className='text-center text-lg font-medium overflow-auto max-h-[180px]'>
                         {card.question}
                       </p>
