@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
@@ -19,7 +21,15 @@ import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
 import { signOut } from 'firebase/auth';
 import { auth, db } from '@/firebase/firebase';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import {
+  collection,
+  getDocs,
+  orderBy,
+  query,
+  doc,
+  getDoc,
+} from 'firebase/firestore';
+import { Timestamp } from 'firebase/firestore';
 
 interface Player {
   name: string;
@@ -28,19 +38,37 @@ interface Player {
   uid: string;
 }
 
-export default function HomePage() {
-  // const [activeTab, setActiveTab] = useState('all');
+interface Todo {
+  id: string;
+  title: string;
+  completed: boolean;
+  createdAt: Timestamp | Date;
+}
 
+export default function HomePage() {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user } = useAuth();
+
+  // Progress state
+  const [streak, setStreak] = useState<number>(0);
+  const [streakPercentage, setStreakPercentage] = useState<number>(0);
+  const [xpPoints, setXpPoints] = useState<number>(0);
+  const [xpPercentage, setXpPercentage] = useState<number>(0);
+  const [nextLevelXP, setNextLevelXP] = useState<number>(0);
+  const [currentLevel, setCurrentLevel] = useState<number>(0);
+  const [completedTasks, setCompletedTasks] = useState<number>(0);
+  const [totalTasks, setTotalTasks] = useState<number>(0);
+  const [tasksPercentage, setTasksPercentage] = useState<number>(0);
+  const [remainingTasks, setRemainingTasks] = useState<number>(0);
 
   const handleLogout = async () => {
     await signOut(auth);
     window.location.reload();
   };
 
+  // Fetch leaderboard data
   useEffect(() => {
     const fetchScores = async () => {
       try {
@@ -65,6 +93,72 @@ export default function HomePage() {
 
     fetchScores();
   }, []);
+
+  // Fetch user progress data
+  useEffect(() => {
+    const fetchUserProgress = async () => {
+      if (!user) return;
+
+      try {
+        // Fetch XP points from score collection
+        const scoreDocRef = doc(db, 'score', user.uid);
+        const scoreDoc = await getDoc(scoreDocRef);
+
+        if (scoreDoc.exists()) {
+          const scoreData = scoreDoc.data();
+          const score = scoreData.score || 0;
+          const xp = score * 10;
+          setXpPoints(xp);
+
+          // Calculate level based on XP (every 500 XP = 1 level)
+          const level = Math.floor(xp / 500) + 1;
+          setCurrentLevel(level);
+
+          // Calculate XP needed for next level
+          const nextLevelXPNeeded = level * 500;
+          setNextLevelXP(nextLevelXPNeeded - xp);
+
+          // Calculate percentage to next level
+          const levelProgress = ((xp % 500) / 500) * 100;
+          setXpPercentage(levelProgress);
+        }
+
+        // Fetch tasks from tasks collection
+        const tasksDocRef = doc(db, 'tasks', user.uid);
+        const tasksDoc = await getDoc(tasksDocRef);
+
+        if (tasksDoc.exists()) {
+          const tasksData = tasksDoc.data();
+          const todos = tasksData.todos || [];
+
+          // Count completed and total tasks
+          const completed = todos.filter((todo: Todo) => todo.completed).length;
+          const total = todos.length;
+
+          setCompletedTasks(completed);
+          setTotalTasks(total);
+          setRemainingTasks(total - completed);
+
+          // Calculate percentage of completed tasks
+          const percentage = total > 0 ? (completed / total) * 100 : 0;
+          setTasksPercentage(percentage);
+        }
+
+        // Calculate streak (for demo purposes, we'll use a random number between 1-14)
+        // In a real app, you would track login dates in Firestore
+        const userStreak = Math.floor(Math.random() * 14) + 1;
+        setStreak(userStreak);
+
+        // Calculate streak percentage (assuming 10 days is 100%)
+        const streakPercentage = Math.min((userStreak / 10) * 100, 100);
+        setStreakPercentage(streakPercentage);
+      } catch (err) {
+        console.error('❌ Error fetching user progress:', err);
+      }
+    };
+
+    fetchUserProgress();
+  }, [user]);
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-[#FFDEE9] to-[#B5FFFC] transition-colors duration-300'>
@@ -255,23 +349,25 @@ export default function HomePage() {
 
           <div className='flex items-center gap-4 ml-auto'>
             <div className='flex items-center gap-3'>
-              {/* <div className='hidden md:flex items-center gap-2 px-3 py-1.5 bg-white/80 rounded-full shadow-sm border border-[#f0f0f0]'>
-                <div className='flex items-center gap-1'>
-                  <span className='text-xs font-semibold text-[#FF6B6B]'>
-                    1,250 XP
-                  </span>
+              {user && (
+                <div className='hidden md:flex items-center gap-2 px-3 py-1.5 bg-white/80 rounded-full shadow-sm border border-[#f0f0f0]'>
+                  <div className='flex items-center gap-1'>
+                    <span className='text-xs font-semibold text-[#FF6B6B]'>
+                      {xpPoints} XP
+                    </span>
+                  </div>
+                  <div className='h-4 w-px bg-[#f0f0f0]'></div>
+                  <div className='flex items-center gap-1'>
+                    <span className='text-xs font-semibold text-[#FF6B6B]'>
+                      Level {currentLevel}
+                    </span>
+                  </div>
                 </div>
-                <div className='h-4 w-px bg-[#f0f0f0]'></div>
-                <div className='flex items-center gap-1'>
-                  <span className='text-xs font-semibold text-[#FF6B6B]'>
-                    Level 7
-                  </span>
-                </div>
-              </div> */}
+              )}
 
               <div className='relative w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-sm'>
                 <Image
-                  src={user?.photoURL || ''}
+                  src={user?.photoURL || '/default-avatar.png'}
                   alt={user?.displayName || 'User'}
                   width={40}
                   height={40}
@@ -285,7 +381,7 @@ export default function HomePage() {
           <div className='bg-gradient-to-r from-[#FF6B6B] to-[#FFD166] rounded-3xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 shadow-lg'>
             <div className='flex-1'>
               <h1 className='text-2xl md:text-3xl font-bold text-white mb-2 flex flex-nowrap'>
-                Hey {user ? user?.displayName : <p>User</p>} ✨
+                Hey {user ? user?.displayName : 'User'} ✨
               </h1>
               <p className='text-white/90 mb-6'>
                 Ready to level up your brain with AI-powered study tools?
@@ -322,17 +418,19 @@ export default function HomePage() {
                   <div className='flex justify-between items-center mb-3'>
                     <h3 className='font-medium text-gray-800'>Daily Streak</h3>
                     <span className='px-2 py-1 text-xs font-medium bg-gradient-to-r from-[#FF6B6B] to-[#FFD166] text-white rounded-full'>
-                      7 days
+                      {streak} days
                     </span>
                   </div>
                   <div className='h-2 w-full bg-gray-100 rounded-full overflow-hidden'>
                     <div
                       className='h-full bg-gradient-to-r from-[#FF6B6B] to-[#FFD166] rounded-full'
-                      style={{ width: '70%' }}></div>
+                      style={{ width: `${streakPercentage}%` }}></div>
                   </div>
                   <p className='text-sm text-gray-600 mt-3 flex items-center'>
                     <span className='inline-block w-2 h-2 rounded-full bg-[#4ECDC4] mr-2'></span>
-                    3 more days to earn a badge!
+                    {10 - streak > 0
+                      ? `${10 - streak} more days to earn a badge!`
+                      : 'Badge earned! Keep it up!'}
                   </p>
                 </div>
 
@@ -340,17 +438,17 @@ export default function HomePage() {
                   <div className='flex justify-between items-center mb-3'>
                     <h3 className='font-medium text-gray-800'>XP Points</h3>
                     <span className='px-2 py-1 text-xs font-medium bg-gradient-to-r from-[#FF6B6B] to-[#FFD166] text-white rounded-full'>
-                      1,250 XP
+                      {xpPoints} XP
                     </span>
                   </div>
                   <div className='h-2 w-full bg-gray-100 rounded-full overflow-hidden'>
                     <div
                       className='h-full bg-gradient-to-r from-[#FF6B6B] to-[#FFD166] rounded-full'
-                      style={{ width: '45%' }}></div>
+                      style={{ width: `${xpPercentage}%` }}></div>
                   </div>
                   <p className='text-sm text-gray-600 mt-3 flex items-center'>
                     <span className='inline-block w-2 h-2 rounded-full bg-[#4ECDC4] mr-2'></span>
-                    550 XP to reach Level 8
+                    {nextLevelXP} XP to reach Level {currentLevel + 1}
                   </p>
                 </div>
 
@@ -360,17 +458,21 @@ export default function HomePage() {
                       Completed Tasks
                     </h3>
                     <span className='px-2 py-1 text-xs font-medium bg-gradient-to-r from-[#FF6B6B] to-[#FFD166] text-white rounded-full'>
-                      24/30
+                      {completedTasks}/{totalTasks}
                     </span>
                   </div>
                   <div className='h-2 w-full bg-gray-100 rounded-full overflow-hidden'>
                     <div
                       className='h-full bg-gradient-to-r from-[#FF6B6B] to-[#FFD166] rounded-full'
-                      style={{ width: '80%' }}></div>
+                      style={{ width: `${tasksPercentage}%` }}></div>
                   </div>
                   <p className='text-sm text-gray-600 mt-3 flex items-center'>
                     <span className='inline-block w-2 h-2 rounded-full bg-[#4ECDC4] mr-2'></span>
-                    6 more tasks to complete this week
+                    {remainingTasks > 0
+                      ? `${remainingTasks} more tasks to complete this week`
+                      : totalTasks > 0
+                      ? 'All tasks completed! Great job!'
+                      : 'Add some tasks to get started'}
                   </p>
                 </div>
               </div>
@@ -492,7 +594,7 @@ export default function HomePage() {
                       <Image
                         width={40}
                         height={40}
-                        src={player.photo}
+                        src={player.photo || '/placeholder.svg'}
                         alt={player.name}
                         className='w-full h-full object-cover'
                       />
