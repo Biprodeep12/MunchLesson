@@ -11,6 +11,7 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import Link from 'next/link';
+import { markdown } from 'markdown';
 
 type TimerMode = 'work' | 'break';
 
@@ -20,6 +21,42 @@ export default function StudyPlanner() {
   const [mode, setMode] = useState<TimerMode>('work');
   const [timeLeft, setTimeLeft] = useState(25 * 60);
   const timerRef = useRef<HTMLDivElement>(null);
+  const [userInput, setUserInput] = useState('');
+  const [aiResponse, setAiResponse] = useState('');
+  const [loadingResponse, setLoadingResponse] = useState(false);
+
+  const generateStudyStrategy = async () => {
+    if (!userInput.trim()) return;
+
+    setLoadingResponse(true);
+    setAiResponse('');
+
+    try {
+      const res = await fetch('/api/ai', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: [
+            {
+              role: 'user',
+              content: `Here's my schedule and goals: ${userInput}. Can you help me create a realistic and effective study strategy?`,
+            },
+          ],
+        }),
+      });
+
+      const data = await res.json();
+      const message = data?.choices?.[0]?.message?.content;
+      setAiResponse(message || 'Sorry, something went wrong.');
+    } catch (error) {
+      console.error('Error getting AI response:', error);
+      setAiResponse('There was an error generating your study strategy.');
+    } finally {
+      setLoadingResponse(false);
+    }
+  };
 
   const workDuration = 25 * 60;
   const breakDuration = 5 * 60;
@@ -177,6 +214,37 @@ export default function StudyPlanner() {
               </div>
             </div>
           </div>
+        </div>
+        <div className='rounded-lg p-6 bg-white shadow-md mb-8'>
+          <h2 className='text-xl font-semibold text-orange-800'>
+            Forge your study Strategy
+          </h2>
+          <textarea
+            value={userInput}
+            onChange={(e) => setUserInput(e.target.value)}
+            className='border-b border-[#ccc] w-full outline-none text-xl p-2 font-mono resize-none'
+            placeholder='E.g., I study in college from 10 AM to 4 PM, sleep at 12 AM, and wake up at 8 AM. I want to prepare for my finals and revise math daily.'
+            rows={4}
+          />
+          <div className='italic text-gray-500 my-3'>
+            Give an Overview of how you spend your day, mentioning your sleeping
+            hours and school/college hours
+          </div>
+          <button
+            onClick={generateStudyStrategy}
+            className='mt-4 px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600 transition-colors'
+            disabled={loadingResponse}>
+            {loadingResponse ? 'Generating...' : 'Generate Strategy'}
+          </button>
+
+          {aiResponse && (
+            <div className='mt-4 p-4 bg-orange-100 rounded text-orange-800 whitespace-pre-wrap'>
+              <p
+                dangerouslySetInnerHTML={{
+                  __html: markdown.toHTML(aiResponse),
+                }}></p>
+            </div>
+          )}
         </div>
       </div>
     </div>

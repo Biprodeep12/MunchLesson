@@ -247,6 +247,14 @@ export default function Quiz() {
                 {submitted && question.feedback && (
                   <div className='mt-2 text-sm italic text-gray-700'>
                     {question.feedback}
+                    <Link
+                      href={{
+                        pathname: '/AIPage',
+                        query: { question: question.question },
+                      }}
+                      className='text-blue-600 underline ml-2'>
+                      Read More
+                    </Link>
                   </div>
                 )}
               </div>

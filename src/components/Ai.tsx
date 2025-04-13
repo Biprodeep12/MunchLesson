@@ -2,8 +2,12 @@ import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import { MoveRight } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { markdown } from 'markdown';
 
 export default function Ai() {
+  const router = useRouter();
+  const { question } = router.query;
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -13,6 +17,42 @@ export default function Ai() {
   >([]);
   const [isAi, setIsAi] = useState(true);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (question && typeof question === 'string' && messages.length === 0) {
+      handleInitialQuestion(question);
+    }
+  }, [messages.length, question]);
+
+  const handleInitialQuestion = async (question: string) => {
+    setIsAi(false);
+    setLoading(true);
+
+    const userMessage = { role: 'user' as const, content: question };
+    setMessages([userMessage]);
+
+    try {
+      const response = await fetch('/api/ai', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: [userMessage] }),
+      });
+
+      if (!response.ok) throw new Error('AI response failed');
+
+      const data = await response.json();
+      const aiMessage = {
+        role: 'assistant' as const,
+        content: data.choices[0]?.message?.content || 'No response',
+      };
+
+      setMessages((prev) => [...prev, aiMessage]);
+    } catch (error) {
+      console.error('Error fetching AI response:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -96,7 +136,10 @@ export default function Ai() {
                     ? 'bg-blue-500 text-white'
                     : 'bg-white text-black'
                 }`}>
-                {msg.content}
+                <p
+                  dangerouslySetInnerHTML={{
+                    __html: markdown.toHTML(msg.content),
+                  }}></p>
               </div>
             ))}
             {loading && (

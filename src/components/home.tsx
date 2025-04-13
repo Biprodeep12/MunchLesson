@@ -51,7 +51,6 @@ export default function HomePage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { user } = useAuth();
 
-  // Progress state
   const [streak, setStreak] = useState<number>(0);
   const [streakPercentage, setStreakPercentage] = useState<number>(0);
   const [xpPoints, setXpPoints] = useState<number>(0);
@@ -68,7 +67,6 @@ export default function HomePage() {
     window.location.reload();
   };
 
-  // Fetch leaderboard data
   useEffect(() => {
     const fetchScores = async () => {
       try {
@@ -94,13 +92,11 @@ export default function HomePage() {
     fetchScores();
   }, []);
 
-  // Fetch user progress data
   useEffect(() => {
     const fetchUserProgress = async () => {
       if (!user) return;
 
       try {
-        // Fetch XP points from score collection
         const scoreDocRef = doc(db, 'score', user.uid);
         const scoreDoc = await getDoc(scoreDocRef);
 
@@ -110,20 +106,16 @@ export default function HomePage() {
           const xp = score * 10;
           setXpPoints(xp);
 
-          // Calculate level based on XP (every 500 XP = 1 level)
           const level = Math.floor(xp / 500) + 1;
           setCurrentLevel(level);
 
-          // Calculate XP needed for next level
           const nextLevelXPNeeded = level * 500;
           setNextLevelXP(nextLevelXPNeeded - xp);
 
-          // Calculate percentage to next level
           const levelProgress = ((xp % 500) / 500) * 100;
           setXpPercentage(levelProgress);
         }
 
-        // Fetch tasks from tasks collection
         const tasksDocRef = doc(db, 'tasks', user.uid);
         const tasksDoc = await getDoc(tasksDocRef);
 
@@ -131,7 +123,6 @@ export default function HomePage() {
           const tasksData = tasksDoc.data();
           const todos = tasksData.todos || [];
 
-          // Count completed and total tasks
           const completed = todos.filter((todo: Todo) => todo.completed).length;
           const total = todos.length;
 
@@ -139,17 +130,13 @@ export default function HomePage() {
           setTotalTasks(total);
           setRemainingTasks(total - completed);
 
-          // Calculate percentage of completed tasks
           const percentage = total > 0 ? (completed / total) * 100 : 0;
           setTasksPercentage(percentage);
         }
 
-        // Calculate streak (for demo purposes, we'll use a random number between 1-14)
-        // In a real app, you would track login dates in Firestore
         const userStreak = Math.floor(Math.random() * 14) + 1;
         setStreak(userStreak);
 
-        // Calculate streak percentage (assuming 10 days is 100%)
         const streakPercentage = Math.min((userStreak / 10) * 100, 100);
         setStreakPercentage(streakPercentage);
       } catch (err) {
@@ -455,7 +442,7 @@ export default function HomePage() {
                 <div className='bg-white/80 shadow-sm hover:shadow-md transition-all hover:translate-y-[-2px] rounded-2xl overflow-hidden p-6'>
                   <div className='flex justify-between items-center mb-3'>
                     <h3 className='font-medium text-gray-800'>
-                      Completed Tasks
+                      Study Progress
                     </h3>
                     <span className='px-2 py-1 text-xs font-medium bg-gradient-to-r from-[#FF6B6B] to-[#FFD166] text-white rounded-full'>
                       {completedTasks}/{totalTasks}
