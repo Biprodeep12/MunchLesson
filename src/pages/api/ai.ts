@@ -34,7 +34,7 @@ Key Responsibilities:
 - Keep answers under 3-4 sentences unless asked for more detail.
 - Encourage learning with positivity and clarity.
 
-IMPORTANT: Maintain an encouraging tone, and always redirect back to academic topics if off-subject.`,
+IMPORTANT:Respond in English only Maintain an encouraging tone, and always redirect back to academic topics if off-subject.`,
           },
           ...messages,
         ],
