@@ -11,7 +11,6 @@ import {
   Home,
   LogOut,
   Menu,
-  Settings,
   Trophy,
   X,
   Sparkles,
@@ -221,12 +220,6 @@ export default function HomePage() {
               </nav>
 
               <div className='p-4 border-t border-[#f0f0f0] space-y-2'>
-                <Link
-                  href='/settings'
-                  className='flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-r hover:from-[#FF6B6B]/10 hover:to-[#FFD166]/10 text-gray-700 hover:text-[#FF6B6B] transition-colors'>
-                  <Settings className='h-5 w-5' />
-                  <span>Settings</span>
-                </Link>
                 {user ? (
                   <button
                     onClick={handleLogout}
@@ -302,12 +295,6 @@ export default function HomePage() {
         </nav>
 
         <div className='mt-auto pt-4 border-t border-[#f0f0f0]'>
-          <Link
-            href='/settings'
-            className='flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-r hover:from-[#FF6B6B]/10 hover:to-[#FFD166]/10 text-gray-700 hover:text-[#FF6B6B] transition-colors'>
-            <Settings className='h-5 w-5' />
-            <span>Settings</span>
-          </Link>
           {user ? (
             <button
               onClick={handleLogout}
