@@ -166,7 +166,7 @@ export default function HomePage() {
               <div className='flex items-center gap-2 p-4 border-b border-[#f0f0f0]'>
                 <Sparkles className='h-6 w-6 text-[#FF6B6B]' />
                 <h1 className='text-xl font-bold bg-gradient-to-r from-[#FF6B6B] to-[#FFD166] text-transparent bg-clip-text'>
-                  BrainBoost
+                  StudyMunch
                 </h1>
                 <button
                   onClick={() => setSidebarOpen(false)}

@@ -8,11 +8,11 @@ const quotes = [
   'Discipline is louder than motivation. Show up, even when the spark is silent.',
   'Success isn’t in the big leaps—it’s in the pages no one saw you read.',
   "While others sleep on dreams, you're awake building them—one lesson at a time.",
-  'You’re doing enough. Breathe. You don’t need to rush what’s meant to grow.',
-  'It’s okay to pause. A calm mind absorbs more than a chaotic one.',
-  'You are not a machine. You are a human with limits, and that’s okay.',
-  'The brain learns best in peace. Don’t chase perfection—create balance.',
-  'Step back, breathe deep. The page will wait for you.',
+  // 'You’re doing enough. Breathe. You don’t need to rush what’s meant to grow.',
+  // 'It’s okay to pause. A calm mind absorbs more than a chaotic one.',
+  // 'You are not a machine. You are a human with limits, and that’s okay.',
+  // 'The brain learns best in peace. Don’t chase perfection—create balance.',
+  // 'Step back, breathe deep. The page will wait for you.',
 ];
 
 export default function MotivationGen() {
