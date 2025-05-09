@@ -134,7 +134,7 @@ RULES:
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: 'nvidia/llama-3.1-nemotron-nano-8b-v1:free',
+            model: 'opengvlab/internvl3-2b:free',
             messages: [
               {
                 role: 'system',
