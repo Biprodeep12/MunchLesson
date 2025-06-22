@@ -116,7 +116,6 @@ export default function FlashcardApp() {
 
       <div className="max-w-7xl mx-auto pt-16 sm:pt-8">
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-10">
-          {/* Form Section */}
           <div className="w-full lg:w-[500px] lg:sticky lg:top-8 bg-white/80 backdrop-blur-md p-6 sm:p-8 rounded-3xl shadow-2xl">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#FF5F6D] to-[#FFC371] mb-4">
               Memory Boost
@@ -165,7 +164,6 @@ export default function FlashcardApp() {
             </div>
           </div>
 
-          {/* Flashcards Section */}
           <div className="flex-1 min-w-0">
             <div className="mb-6">
               <input
@@ -196,7 +194,6 @@ export default function FlashcardApp() {
                       }`}
                       style={{ transformStyle: "preserve-3d" }}
                     >
-                      {/* Front of card */}
                       <div
                         className="absolute inset-0 bg-yellow-200 rounded-xl shadow-xl p-4 sm:p-5 flex flex-col justify-between group-hover:shadow-2xl transition-shadow"
                         style={{ backfaceVisibility: "hidden" }}
@@ -228,7 +225,6 @@ export default function FlashcardApp() {
                         </div>
                       </div>
 
-                      {/* Back of card */}
                       <div
                         className="absolute inset-0 bg-[#333] text-white rounded-xl shadow-xl p-4 sm:p-5 flex flex-col justify-between group-hover:shadow-2xl transition-shadow"
                         style={{
@@ -279,7 +275,6 @@ export default function FlashcardApp() {
         </div>
       </div>
 
-      {/* Edit Modal */}
       {editingId && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
           <div className="bg-white p-6 rounded-xl shadow-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
