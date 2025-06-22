@@ -200,19 +200,19 @@ export default function HomePage() {
                   <span>Flash Cards</span>
                 </Link>
                 <Link
-                  href='/leaderPage'
+                  href='/leaderboard'
                   className='flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-r hover:from-[#FF6B6B]/10 hover:to-[#FFD166]/10 text-gray-700 hover:text-[#FF6B6B] transition-colors'>
                   <Trophy className='h-5 w-5' />
                   <span>Leaderboard</span>
                 </Link>
                 <Link
-                  href='/todoPage'
+                  href='/TodoPage'
                   className='flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-r hover:from-[#FF6B6B]/10 hover:to-[#FFD166]/10 text-gray-700 hover:text-[#FF6B6B] transition-colors'>
                   <CheckCircle className='h-5 w-5' />
                   <span>To-Do List</span>
                 </Link>
                 <Link
-                  href='/AiPage'
+                  href='/AIPage'
                   className='flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-gradient-to-r hover:from-[#FF6B6B]/10 hover:to-[#FFD166]/10 text-gray-700 hover:text-[#FF6B6B] transition-colors'>
                   <Bot className='h-5 w-5' />
                   <span>Study AI</span>

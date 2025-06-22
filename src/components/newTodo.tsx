@@ -3,7 +3,7 @@
 import { ArrowLeft, ListChecks, Plus, Trash2 } from "lucide-react"
 import type React from "react"
 import { useEffect, useState } from "react"
-import { doc, getDoc, setDoc } from "firebase/firestore"
+import { doc, getDoc, setDoc, Timestamp } from "firebase/firestore"
 import { db } from "@/firebase/firebase"
 import Link from "next/link"
 import { useAuth } from "@/context/AuthContext"
@@ -15,12 +15,36 @@ type Todo = {
   createdAt: Date
 }
 
+type FirestoreTodo = {
+  id: number
+  text: string
+  completed: boolean
+  createdAt: string | Timestamp | number | null | undefined
+}
+
+type FirestoreData = {
+  todos?: FirestoreTodo[]
+}
+
 const TodoList: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([])
   const [newTodo, setNewTodo] = useState<string>("")
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const { user } = useAuth()
+
+  const convertToDate = (dateValue: string | Timestamp | number | null | undefined): Date => {
+    if (!dateValue) {
+      return new Date()
+    }
+
+    if (dateValue instanceof Timestamp) {
+      return dateValue.toDate()
+    }
+
+    const date = new Date(dateValue)
+    return isNaN(date.getTime()) ? new Date() : date
+  }
 
   useEffect(() => {
     const fetchTodos = async () => {
@@ -30,24 +54,13 @@ const TodoList: React.FC = () => {
           const docRef = doc(db, "tasks", user.uid)
           const docSnap = await getDoc(docRef)
           if (docSnap.exists()) {
-            const data = docSnap.data()
-            const todosWithDates = (data.todos || []).map((todo: any) => {
-              let createdAt: Date
-
-              if (todo.createdAt?.toDate) {
-                createdAt = todo.createdAt.toDate()
-              } else if (todo.createdAt) {
-                const dateValue = new Date(todo.createdAt)
-                createdAt = isNaN(dateValue.getTime()) ? new Date() : dateValue
-              } else {
-                createdAt = new Date()
-              }
-
-              return {
-                ...todo,
-                createdAt,
-              }
-            })
+            const data = docSnap.data() as FirestoreData
+            const todosWithDates: Todo[] = (data.todos || []).map((todo: FirestoreTodo) => ({
+              id: todo.id,
+              text: todo.text,
+              completed: todo.completed,
+              createdAt: convertToDate(todo.createdAt),
+            }))
             setTodos(todosWithDates)
           }
         } catch (error) {
@@ -69,8 +82,10 @@ const TodoList: React.FC = () => {
     try {
       setSaving(true)
       const docRef = doc(db, "tasks", user.uid)
-      const todosForFirestore = updatedTodos.map((todo) => ({
-        ...todo,
+      const todosForFirestore: FirestoreTodo[] = updatedTodos.map((todo) => ({
+        id: todo.id,
+        text: todo.text,
+        completed: todo.completed,
         createdAt: todo.createdAt.toISOString(),
       }))
       await setDoc(docRef, { todos: todosForFirestore }, { merge: true })
