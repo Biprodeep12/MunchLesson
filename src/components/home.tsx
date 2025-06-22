@@ -15,6 +15,7 @@ import {
   X,
   Sparkles,
   Bot,
+  User,
 } from 'lucide-react';
 import Image from 'next/image';
 import { useAuth } from '@/context/AuthContext';
@@ -339,13 +340,16 @@ export default function HomePage() {
                 </div>
               )}
 
-              <div className='relative w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-sm'>
+              <div onClick={user? handleLogout : undefined} className='relative cursor-pointer w-8 h-8 rounded-full overflow-hidden border-2 border-white shadow-sm'>
+                {user?.photoURL ?
                 <Image
-                  src={user?.photoURL || '/default-avatar.png'}
-                  alt={user?.displayName || 'User'}
+                  src={user.photoURL || '/default-avatar.png'}
+                  alt={user.displayName || 'User'}
                   width={40}
                   height={40}
                 />
+              :
+              <User size={25} color='black'/>}
               </div>
             </div>
           </div>
