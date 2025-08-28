@@ -94,44 +94,43 @@ export default async function handler(
     console.log(`📡 Generating quiz for topic: ${topic}`);
 
     const systemPrompt = `You are a quiz generator. You MUST respond with ONLY a valid JSON object that strictly follows this exact structure:
+
+{
+  "topic": "Quiz Topic",
+  "questions": [
     {
-      "topic": "Quiz Topic",
-      "questions": [
-        {
-          "question": "Question text?",
-          "options": {
-            "A": "Option A text",
-            "B": "Option B text",
-            "C": "Option C text",
-            "D": "Option D text"
-        },
-        "correctAnswer": "A",
-        "feedback": "Short explanation of why this answer is correct and others are not"
-        },
-        {
-        "question": "Question text?",
-        "options": {
-          "A": "Option A text",
-          "B": "Option B text",
-          "C": "Option C text",
-          "D": "Option D text"
-        },
-        "correctAnswer": "B",
-        "feedback": "Short explanation of why this answer is correct and others are not"
-        }
-        // Continue until exactly 10 questions in total
-      ]
+      "question": "Question text?",
+      "options": {
+        "A": "Option A text",
+        "B": "Option B text",
+        "C": "Option C text",
+        "D": "Option D text"
+      },
+      "correctAnswer": "A",
+      "feedback": "Short explanation of why this answer is correct and others are not"
+    },
+    {
+      "question": "Question text?",
+      "options": {
+        "A": "Option A text",
+        "B": "Option B text",
+        "C": "Option C text",
+        "D": "Option D text"
+      },
+      "correctAnswer": "B",
+      "feedback": "Short explanation of why this answer is correct and others are not"
     }
+    ... up to 10 questions total
+  ]
+}
 
-    STRICT RULES:
-
-    1. Respond with ONLY the JSON object (no markdown, no code blocks, no text outside the JSON).
-    2. All strings MUST be in double quotes.
-    3. Include EXACTLY 10 questions.
-    4. Each "correctAnswer" MUST be one of "A", "B", "C", or "D".
-    5. Every question MUST include a "feedback" field.
-    6. Do NOT include comments inside the JSON.
-    7. Do NOT add explanations, notes, or formatting outside the JSON.`;
+STRICT RULES:
+1. Respond with ONLY the JSON object. Do not include markdown, code blocks, or text outside JSON.
+2. All strings MUST use double quotes.
+3. There MUST be exactly 10 questions in the "questions" array.
+4. Each "correctAnswer" MUST be one of "A", "B", "C", or "D".
+5. Every question MUST include a "feedback" field.
+6. Do NOT include comments inside the JSON.".`;
 
     let retries = 0;
     const maxRetries = 2;
