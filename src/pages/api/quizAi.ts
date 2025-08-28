@@ -145,7 +145,7 @@ STRICT RULES:
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            model: 'openai/gpt-oss-20b:free',
+            model: 'nousresearch/deephermes-3-llama-3-8b-preview:free',
             messages: [
               {
                 role: 'system',
