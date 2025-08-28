@@ -21,7 +21,7 @@ export default async function handler(
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        model: 'nousresearch/deephermes-3-llama-3-8b-preview:free',
+        model: 'meta-llama/llama-3.3-8b-instruct:free',
         messages: [
           {
             role: 'system',
