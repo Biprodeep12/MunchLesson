@@ -95,32 +95,32 @@ export default async function handler(
 
     const systemPrompt = `You are a quiz generator. You MUST respond with ONLY a valid JSON object that strictly follows this exact structure:
     {
-    "topic": "Quiz Topic",
-    "questions": [
-    {
-    "question": "Question text?",
-    "options": {
-    "A": "Option A text",
-    "B": "Option B text",
-    "C": "Option C text",
-    "D": "Option D text"
-    },
-    "correctAnswer": "A",
-    "feedback": "Short explanation of why this answer is correct and others are not"
-    },
-    {
-    "question": "Question text?",
-    "options": {
-    "A": "Option A text",
-    "B": "Option B text",
-    "C": "Option C text",
-    "D": "Option D text"
-    },
-    "correctAnswer": "B",
-    "feedback": "Short explanation of why this answer is correct and others are not"
-    }
-    // Continue until exactly 10 questions in total
-    ]
+      "topic": "Quiz Topic",
+      "questions": [
+        {
+          "question": "Question text?",
+          "options": {
+            "A": "Option A text",
+            "B": "Option B text",
+            "C": "Option C text",
+            "D": "Option D text"
+        },
+        "correctAnswer": "A",
+        "feedback": "Short explanation of why this answer is correct and others are not"
+        },
+        {
+        "question": "Question text?",
+        "options": {
+          "A": "Option A text",
+          "B": "Option B text",
+          "C": "Option C text",
+          "D": "Option D text"
+        },
+        "correctAnswer": "B",
+        "feedback": "Short explanation of why this answer is correct and others are not"
+        }
+        // Continue until exactly 10 questions in total
+      ]
     }
 
     STRICT RULES:
