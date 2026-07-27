@@ -11,7 +11,7 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import Link from 'next/link';
-import { markdown } from 'markdown';
+import ReactMarkdown from 'react-markdown';
 
 type TimerMode = 'work' | 'break';
 
@@ -239,10 +239,7 @@ export default function StudyPlanner() {
 
           {aiResponse && (
             <div className='mt-4 p-4 bg-orange-100 rounded text-orange-800 whitespace-pre-wrap'>
-              <p
-                dangerouslySetInnerHTML={{
-                  __html: markdown.toHTML(aiResponse),
-                }}></p>
+              <ReactMarkdown>{aiResponse}</ReactMarkdown>
             </div>
           )}
         </div>

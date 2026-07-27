@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { MoveRight } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { markdown } from 'markdown';
+import ReactMarkdown from 'react-markdown';
 
 const SpeechRecognitionAPI: typeof SpeechRecognition | undefined =
   typeof window !== 'undefined'
@@ -203,10 +203,7 @@ export default function Ai() {
                     ? 'bg-blue-500 text-white'
                     : 'bg-white text-black'
                 }`}>
-                <p
-                  dangerouslySetInnerHTML={{
-                    __html: markdown.toHTML(msg.content),
-                  }}></p>
+                <ReactMarkdown>{msg.content}</ReactMarkdown>
               </div>
             ))}
             {loading && (

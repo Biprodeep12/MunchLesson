@@ -15,11 +15,15 @@
     "lucide": "^1.14.0",
     "lucide-react": "^1.14.0",
     "next": "^16.2.6",
-    "postcss": "^8.5.10",
+    "postcss": "^8.5.23",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-hot-toast": "^2.6.0",
     "react-markdown": "^10.1.0"
+  },
+  "overrides": {
+    "postcss": "$postcss",
+    "sharp": "^0.35.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
